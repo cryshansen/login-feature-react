@@ -1,6 +1,16 @@
-# React + Vite
+# React Login Feature
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+
+
+
+
+
+Notes on React + Vite configurations
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules. Later we will build out the Typescript version however this particular series is a walkthough about a life cycle of a developers processes to end product. It is intended as a demonstration of feature development including ci and github actions against testing. 
+
+---
 
 Currently, two official plugins are available:
 
@@ -16,3 +26,5 @@ Note: This will impact Vite dev & build performances.
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+A Future development model in TypeScript shall follow for strongly typed fields.
