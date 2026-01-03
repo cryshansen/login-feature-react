@@ -1,6 +1,8 @@
 # React Login Feature
 
+This repository is a compilation of a login feature in React. It is intended to be used in conjunction with the block post series React Login Feature.  It walks through all conciderations from the initial start of a react project building the routing, UI implementations, state, localstorage, API connections testing and deployment into another app to test its drop in feature effectiveness. 
 
+Every developer requires component features that provide services for the different components of general website functionalities. This feature is a login app component. Other features could include carts, payment, storefront frameworks etc. 
 
 
 ---
