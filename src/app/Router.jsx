@@ -10,4 +10,4 @@ function Router() {
   )
 }
 
-export default App
+export default Router
