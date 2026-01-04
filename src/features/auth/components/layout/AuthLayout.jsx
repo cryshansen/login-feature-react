@@ -15,12 +15,6 @@ export default function AuthLayout({  darkMode, setDarkMode }) {
     <div className="min-h-screen flex flex-col w-screen">
       <HeaderTopLevel darkMode={darkMode} />
       <AuthFacingHeader darkMode={darkMode}  setDarkMode={setDarkMode} />
-      {/* <div className="flex flex-1 w-full"> */}
-          {/* <div className={`${darkMode ? "bg-slate-900 text-slate-100" : "bg-slate-100 text-slate-900"} `}>
-              <Outlet /> {/* ✅ Child routes render here */}
-         {/*} </div> */}
-        {/* </div> */}
- 
       
       <main className={`flex-1 w-full  ${darkMode ? "bg-slate-800 text-slate-100" : "bg-slate-100 text-slate-900"} bg-slate-800`}>
       {/* <div className="flex flex-1 w-full"> */}
