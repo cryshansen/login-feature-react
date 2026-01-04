@@ -4,6 +4,8 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import PasswordRules from "./PasswordRules";
 import {getPasswordRules} from "../utils/passwordRules";
 
+import PasswordStrengthMeter from "./PasswordStrengthMeter";
+import {getPasswordStrength} from "../utils/passwordStrength";
 
 export default function ConfirmPasswordFields({
   password,
@@ -17,7 +19,7 @@ export default function ConfirmPasswordFields({
   const [touched, setTouched] = useState(false);
 
   const rules = getPasswordRules(password, confirm);
-  
+  const strength = getPasswordStrength(password);
 
   const passwordsMatch = password && confirm && password === confirm;
 
@@ -55,7 +57,7 @@ export default function ConfirmPasswordFields({
             )}
           </button>
         </div>
-
+        <PasswordStrengthMeter strength={strength} />
       </div>
 
       {/* Confirm Password */}

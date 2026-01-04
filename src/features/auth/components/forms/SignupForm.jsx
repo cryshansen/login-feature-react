@@ -18,6 +18,7 @@ export default function SignupForm({ darkMode }) {
   darkMode = true; // temp for testing
 
   const passwordsMatch = password.length > 0 && confirm.length > 0 && password === confirm;
+  const canSubmit = passwordsMatch && strength.score >=3 && firstName && lastName && email;
 
   const handleSubmit = async (e) => {
    
@@ -77,8 +78,6 @@ export default function SignupForm({ darkMode }) {
             />
           </div>
            {/* Password */}
- 
-
           <ConfirmPasswordFields
             password={password}
             setPassword={setPassword}
