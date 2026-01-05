@@ -38,6 +38,7 @@ export default function SignupForm({ darkMode }) {
           <FirstLastNameFields darkMode={darkMode} />
           {/* Email */}
           <div>
+
             <EmailField darkMode={darkMode} />
           </div>
            {/* Password */}

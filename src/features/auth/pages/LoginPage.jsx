@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import LoginForm from "../components/forms/LoginForm";
-
+import OAuthButtons from "../components/forms/OAuthButtons";
 
 export default function LoginPage({darkMode}){
 
@@ -25,7 +25,7 @@ export default function LoginPage({darkMode}){
                             Start a 14 day free trial
                         </Link>
                     </p>
-                    
+                     <OAuthButtons darkMode={darkMode} />
  
                 
                 </div>

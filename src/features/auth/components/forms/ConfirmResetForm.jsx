@@ -16,7 +16,7 @@ export default function ConfirmResetForm({ darkMode }) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
-  
+
   const passwordsMatch = password === confirm && password.length > 0;
 
 
