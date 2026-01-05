@@ -9,6 +9,7 @@ import ConfirmEmailPage from '../features/auth/pages/ConfirmEmailPage';
 import RequestResetPage from '../features/auth/pages/RequestResetPage';
 import ConfirmResetPage from '../features/auth/pages/ConfirmResetPage';
 import NotFoundPage from '../features/auth/pages/NotFoundPage';
+import ProfilePage from '../features/auth/pages/ProfilePage';
 
 
 
@@ -27,6 +28,9 @@ function AppRouter() {
             <Route path="/signup" element={<SignupPage darkMode={darkMode} />} />
             {/** lander from email link after creating account. */}
             <Route path="/confirm-email" element={<ConfirmEmailPage darkMode={darkMode} />} />
+            {/** end signup section link to login */}
+            {/** User Landing page   */}
+            <Route path="/profile" element={<ProfilePage darkMode={darkMode} />} />
             {/** end signup section link to login */}
           </Route>
         {/* Fallback */}

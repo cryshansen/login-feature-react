@@ -1,7 +1,9 @@
 import React,{ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import EmailField from "./EmailField";
 import ConfirmPasswordFields from "./ConfirmPasswordFields";
+import FirstLastNameFields from "./FirstLastNameFields";
 
 export default function SignupForm({ darkMode }) {
   
@@ -21,7 +23,10 @@ export default function SignupForm({ darkMode }) {
   const canSubmit = passwordsMatch && strength.score >=3 && firstName && lastName && email;
 
   const handleSubmit = async (e) => {
-   
+    e.preventDefault();
+    if(canSubmit){
+       //do something
+     }
   };
 
   return (
@@ -30,52 +35,10 @@ export default function SignupForm({ darkMode }) {
         <form className="space-y-5 " onSubmit={handleSubmit}>
 
           {/* Name First, Last  */}
-          <div>
-            <label className="block mb-1 font-medium block text-sm/6 font-medium text-gray-100">Firstname</label>
-
-            <input
-                placeholder="Firstname"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-  
-                  ${darkMode
-                    ? "bg-slate-700"
-                    : "bg-white"
-                  }     
-                  `}
-              />
-          </div>
-          
-          <div>
-              <label className="block mb-1 font-medium block text-sm/6 font-medium text-gray-100">Lastname</label>
-
-              <input
-                placeholder="Lastname"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className={`block w-full rounded bg-white/5
-                            px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 
-  
-                  ${darkMode
-                    ? "bg-slate-700"
-                    : "bg-white"
-                  }   
-                  `}
-              />
-          </div>
-
+          <FirstLastNameFields darkMode={darkMode} />
           {/* Email */}
           <div>
-            <label className="block mb-1 font-medium block text-sm/6 font-medium text-gray-100">Email</label>
-            <input
-              type="email"
-              className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-              value={email}
-              autoComplete="on"
-              onChange={(e) => setEmail(e.target.value)}
-               
-            />
+            <EmailField darkMode={darkMode} />
           </div>
            {/* Password */}
           <ConfirmPasswordFields
