@@ -72,7 +72,7 @@ export default function AuthFacingHeader({darkMode, setDarkMode}){
 
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm/6 font-semibold text-white">
+            <PopoverButton className="flex items-center gap-x-1 text-sm/6 font-semibold text-white py-2">
               Product
               <ChevronDownIcon aria-hidden="true" className="size-5 flex-none text-gray-500" />
             </PopoverButton>

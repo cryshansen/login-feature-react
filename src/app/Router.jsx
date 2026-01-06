@@ -2,6 +2,10 @@ import { useState } from 'react'
 import { Routes, Route } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
 
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicOnlyRoute from "./routes/PublicOnlyRoute";
+
+
 import AuthLayout from '../features/auth/components/layout/AuthLayout';
 import LoginPage from '../features/auth/pages/LoginPage';
 import SignupPage from '../features/auth/pages/SignupPage';
@@ -17,7 +21,10 @@ function AppRouter() {
   const [darkMode, setDarkMode] = useState(false);
   return (
      <Routes>
+      {/** AUTH PAGES (public only) */}
         <Route element={<AuthLayout  darkMode={darkMode}  setDarkMode={setDarkMode} />} >
+
+          <Route element={<PublicOnlyRoute />}>
             <Route path="/login" element={<LoginPage darkMode={darkMode} />} />
             {/** reset password section enter email for reset to be sent to.  */}
             <Route path="/reset" element={<RequestResetPage darkMode={darkMode} />} />
@@ -29,10 +36,14 @@ function AppRouter() {
             {/** lander from email link after creating account. */}
             <Route path="/confirm-email" element={<ConfirmEmailPage darkMode={darkMode} />} />
             {/** end signup section link to login */}
-            {/** User Landing page   */}
-            <Route path="/profile" element={<ProfilePage darkMode={darkMode} />} />
-            {/** end signup section link to login */}
           </Route>
+        </Route>
+        {/** PROTECTED ROUTES - must be logged in */}
+        <Route element={<ProtectedRoute />}>
+          {/** User Landing page   */}
+          <Route path="/profile" element={<ProfilePage darkMode={darkMode} />} />
+          {/** end signup section link to login */}
+        </Route>  
         {/* Fallback */}
         <Route path="/not-found" element={<NotFoundPage darkMode={darkMode}  />} />
         {/* wildcard catch-all */}
