@@ -1,8 +1,7 @@
 
 import React, { useState } from "react";
 
-export default function EmailField({ darkMode }) {
-    const [email, setEmail] = useState("");
+export default function EmailField({ darkMode, email, onChange }) {
 
     return (
 
@@ -12,7 +11,7 @@ export default function EmailField({ darkMode }) {
             type="email"
             value={email}
             required
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
             className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
           />
        </div>

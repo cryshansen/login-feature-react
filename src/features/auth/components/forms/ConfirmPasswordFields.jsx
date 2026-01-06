@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import PasswordRules from "./PasswordRules";
 import {getPasswordRules} from "../utils/passwordRules";
 
 import PasswordStrengthMeter from "./PasswordStrengthMeter";
-import {getPasswordStrength} from "../utils/passwordStrength";
+
 
 export default function ConfirmPasswordFields({
   password,
@@ -13,13 +13,14 @@ export default function ConfirmPasswordFields({
   confirm,
   setConfirm,
   showConfirm = true,
+  strength,
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [touched, setTouched] = useState(false);
 
   const rules = getPasswordRules(password, confirm);
-  const strength = getPasswordStrength(password);
+
 
   const passwordsMatch = password && confirm && password === confirm;
 

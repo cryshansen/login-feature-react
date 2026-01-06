@@ -2,10 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CircleUserRound, LogIn, LogOut, User, Coffee, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../../../context/AuthContext";
 
-export default function AccountDropdown({ darkMode, isLoggedIn, logout }) {
+export default function AccountDropdown({ darkMode, isLoggedIn }) {
   
   const navigate = useNavigate();
+  const {logout} = useAuth();
+
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -20,7 +23,11 @@ export default function AccountDropdown({ darkMode, isLoggedIn, logout }) {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const handleLogout = () =>{logout(); navigate("/login", {replace:true});}
+  const handleLogout = () =>{
+      logout(); 
+      navigate("/login", {replace:true});
+  
+  }
   
   return (
     <div ref={menuRef} className="relative p-0">

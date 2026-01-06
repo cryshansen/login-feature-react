@@ -5,16 +5,78 @@ import AuthBackground from "../components/elements/AuthBackground";
 import FirstLastNameFields from "../components/forms/FirstLastNameFields";
 import EmailField from "../components/forms/EmailField";
 
+import {useAuth} from "../../../context/AuthContext";
+
 export default function ProfilePage({ darkMode }) {
+   const navigate = useNavigate();
   darkMode = true; // temp for testing
-   const user = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
+  //const user = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
    
+
+  //usercontexts use with authContext 
+  const {
+    user,
+    updateProfile,
+    requestPasswordReset,
+    requestEmailChange,
+    authMessage,
+    clearAuthMessage,
+  } = useAuth();
+
+  //Parent owns the State for the form fields
+    const [firstName, setFirstName] = useState(user?.firstName ?? "");
+    const [lastName, setLastName] = useState(user?.lastName ?? "");
+    const [newEmail, setNewEmail] = useState("");
+    const [error, setError] = useState(null);
+    const fakeUser = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
+    const userTest = fakeUser.email; // for testing without auth
+
    const handleEmailChange = async () => {
+      //requestEmailChange({ email: user.email }) // needs new and old email so can switch and trace tag in kanban
+
+      setError(null);
+      clearAuthMessage();
+
+    try {
+     await requestEmailChange(newEmail);
+       navigate("/profile", { replace: true });
+   
+      setNewEmail("");
+    } catch (err) {
+      setError(err.message);
+    }
+   };
+
+   const handlePasswordReset = async () => {
+
+    setError(null);
+    clearAuthMessage();
+
+    try {
+      await requestPasswordReset({  email: userTest });
+      navigate("/profile", { replace: true });
+   
+    } catch (err) {
+      setError(err.message);
+    }
+
 
    };
-   const handlePasswordReset = async () => {
-   };
    const handleProfileSave = async () => {
+    //update profile logic
+      setError(null);
+      clearAuthMessage();
+
+    try {
+      await updateProfile({ firstName, lastName });
+      navigate("/profile", { replace: true });
+   
+    } catch (err) {
+      setError(err.message);
+    }
+
+
+
    };
 
    return (
@@ -27,12 +89,29 @@ export default function ProfilePage({ darkMode }) {
           />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white pb-4">Profile</h2>
        </div>
+        {/* Messages */}
+           {authMessage && (
+            <div className="p-3 rounded bg-green-100 text-green-800">
+              {authMessage.text}
+            </div>
+          )}
 
+          {error && (
+            <div className="p-3 rounded bg-red-100 text-red-800">
+              {error}
+            </div>
+          )}
           <div className={`max-w-xl space-y-8 p-6 rounded-lg shadow-sm backdrop-blur-md border bg-slate-900 border-white/20`}>
       
             {/* Name Section */}
             <section className="space-y-4 ">
-             <FirstLastNameFields darkMode={darkMode} />
+             <FirstLastNameFields 
+                darkMode={darkMode} 
+                firstName={firstName}
+                lastName={lastName}
+                onFirstNameChange={setFirstName}
+                onLastNameChange={setLastName}
+              />
       
               <button
                 onClick={handleProfileSave}
@@ -47,16 +126,13 @@ export default function ProfilePage({ darkMode }) {
               <h2 className="text-lg font-medium">Email</h2>
       
               <p className="text-sm text-gray-600">
-                Current email: <strong>{user.email}</strong>
+                Current email: <strong>{userTest}</strong>
               </p>
-                 {/* <input
-                    type="email"
-                    className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                    value={newEmail}
-                    autoComplete="on"
-                     onChange={(e) => setNewEmail(e.target.value)}
-                  /> */}
-               <EmailField darkMode={darkMode} />
+               <EmailField 
+                  darkMode={darkMode} 
+                  email={newEmail}
+                  onChange={setNewEmail}
+               />
               <button
                 onClick={handleEmailChange}
                   className={`px-4 py-2 border rounded border-indigo-600 text-indigo-600 hover:bg-indigo-300

@@ -1,27 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 
+import { useAuth } from "../../../../context/AuthContext";
+
 export default function LoginForm({ darkMode }) {
 
   const navigate = useNavigate();
+  //addition of auth context.   //const {login} = useAuth();
+  const { login, authMessage, clearAuthMessage, isAuthenticated } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   
+    clearAuthMessage();
+   try {
+      await login({ email, password });
+    } catch (err) {
+      // handled by auth state
+    }
     
   };
+  
+/***
+ * 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+   // clearAuthMessage();
 
+    try{
+       //await login({ email, password });
+       //console.log("loggedIn");
+       navigate("/user-dashboard", { replace: true });
+   
+    }catch (err) {
+      setError(err.message);
+      //console.log(err.message);
+    }
+  };
+
+  /**
+   * 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login({ email, password });
+    navigate("/", { replace: true });
+  };
+   * await fetch("http://localhost:8080/api/login", {
+  method: "POST",
+  …
+});
+
+ */
  
   return (
-
+    <>
+          { authMessage && (
+            <p className="text-sm text-indigo-400">{authMessage.text}</p>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
@@ -91,5 +139,6 @@ export default function LoginForm({ darkMode }) {
               </button>
               </div>
           </form>
+          </>
   );
 }

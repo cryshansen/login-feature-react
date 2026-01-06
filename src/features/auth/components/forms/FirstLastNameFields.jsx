@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 
-export default function FirstLastNameFields({darkMode}) {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+export default function FirstLastNameFields({
+  darkMode,
+  firstName,
+  lastName,
+  onFirstNameChange,
+  onLastNameChange,
+}) {
+
     return (
         <>
         {/* Name Section */}
@@ -11,7 +16,7 @@ export default function FirstLastNameFields({darkMode}) {
               <input
                       placeholder="Firstname"
                       value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
+                      onChange={(e) => onFirstNameChange(e.target.value)}
                       className={`block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
         
                         ${darkMode
@@ -23,7 +28,7 @@ export default function FirstLastNameFields({darkMode}) {
               <input
                       placeholder="Last name"
                       value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      onChange={(e) => onLastNameChange(e.target.value)}
                       className={`block w-full rounded bg-white/5
                                   px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 
         
