@@ -11,44 +11,58 @@ import {getPasswordStrength} from "../utils/passwordStrength";
 export default function ConfirmResetForm({ darkMode }) {
 
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
+  const tokenUrl = searchParams.get("token");
   const email =  searchParams.get("email");
+
   const navigate = useNavigate();
-  const { resetPassword, clearAuthMessage } = useAuth();
+  const { resetPassword, authMessage, clearAuthMessage } = useAuth();
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
+  const [token, setToken] = useState(""); //captcha token
   const [error, setError] = useState(null);
 
   const strength = getPasswordStrength(password);
 
   const passwordsMatch = password === confirm && password.length > 0;
 
-const canSubmit =
-  passwordsMatch &&
-  strength.score >= 3 &&
-  firstName &&
-  lastName &&
-  email;
+  const canSubmit =
+    passwordsMatch &&
+    strength.score >= 3;
 
+  //TODO: if current password = user.password then allow through 
   const handleSubmit = async (e) => {
-    //console.log(email + " " + pw + " " +  confirm  + " " + token);
+
      e.preventDefault();
      clearAuthMessage();
      setError(null);
-     clearAuthMessage();
-     try{
-          await resetPassword({ email, currentPassword, password, confirm, token });
-          navigate("/login", { replace: true });
-     }catch (err) {
-       setError(err.message);
+     setToken("8YUzw_tjotM_oqt9_8XxI"); //not taking effect
+
+     try {
+         console.log(email + "  " + password + "  " +  tokenUrl  + "  " + token);
+          await resetPassword({ email, password, confirm, tokenUrl, token });
+          //navigate("/login", { replace: true });
+     } catch (error) {
+       setError(error.message);
      }
 
   };
 
-
   return (
+    <>
+      {authMessage && (
+        <div className="space-y-3">
+          <div className="p-3 rounded bg-green-100 text-green-800">
+            {authMessage.text}
+          </div>
+        </div>
+      )}
+      {error && (
+          <div className="p-3 rounded bg-red-100 text-red-800">
+            {error}
+          </div>
+        )}
 
         <form className="space-y-5" onSubmit={handleSubmit}>
           {/* Current password */}
@@ -84,5 +98,6 @@ const canSubmit =
               Update Password
             </button>
         </form>
+        </>
   );
 }

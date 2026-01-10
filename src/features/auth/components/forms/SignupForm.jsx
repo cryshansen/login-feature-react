@@ -51,7 +51,7 @@ export default function SignupForm({ darkMode }) {
      clearAuthMessage();
      try{
           await signup({ firstName, lastName, email, password, confirm });
-          navigate("/login", { replace: true });
+          //navigate("/login", { replace: true });
      }catch (err) {
        setError(err.message);
      }

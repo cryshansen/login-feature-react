@@ -1,43 +1,14 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState,useCallback } from "react";
+// context/AuthContext.tsx
+import {
+  login as loginApi,
+  register as registerApi,
+  requestPasswordResetApi, //send email to update pasword
+  confirmPasswordResetApi, //send password 
+  verifyEmailApi //after signup receive email, click link, page handles data and sends email validation to server. 
+} from "../features/api/services/auth.service";
 
 const AuthContext = createContext(null);
-/**
- * Final UX Flow
-
-User signs up
-
-Passwords validated inline
-
-Message: “Check your email”
-
-Can resend confirmation
-
-Click email link → /confirm-email?token=...
-
-Success → login page
-
-TODO:
-Auto-login after confirmation
-
-Token expiry handling
-
-Confirmation error states (expired / already used)
-
-Auth flow tests (Vitest)
-
-Persist pending signup email across reloads
-
-
-/**. Backend Java 
- * /auth/login
-
-  /auth/register
-
-  /auth/reset-request
-
-  /auth/reset-confirm
-
- */
 
 /**
  * 
@@ -47,16 +18,16 @@ Persist pending signup email across reloads
 export function AuthProvider({ children }) {
 
   //const [user, setUser] = useState(null);
-  const [user, setUser] = useState(() => {
+  const [authuser, setAuthUser] = useState(() => {
       try {
-        return JSON.parse(localStorage.getItem("user"));
+        return JSON.parse(localStorage.getItem("auth_user"));
       } catch {
         return null;
       }
   });
 
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [authMessage, setAuthMessage] = useState(null);
   const [authReady, setAuthReady] = useState(false);
 
@@ -76,37 +47,46 @@ export function AuthProvider({ children }) {
 
     if (parsed.expiresAt < Date.now()) {
       localStorage.removeItem("auth_user");
-      setUser(null);
+      setAuthUser(null);
       setAuthMessage({
         type: "info",
         text: "Your session has expired. Please log in again.",
       });
     } else {
-      setUser(parsed);
+      setAuthUser(parsed);
     }
 
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
+    if (authuser) {
+      localStorage.setItem("auth_user", JSON.stringify(authuser));
     } else {
-      localStorage.removeItem("user");
+      localStorage.removeItem("auth_user");
     }
-  }, [user]);
+  }, [authuser]);
 
 
-  const isAuthenticated = !!user&& !!user.token && (!user.expiresAt || user.expiresAt > Date.now());
+  const isAuthenticated = !!authuser&& !!authuser.token && (!authuser.expiresAt || authuser.expiresAt > Date.now());
+ /*** Handle Auth Messages  clear the mesage*/
+  const clearAuthMessage = () => {
+    setAuthMessage(null);
+  };
+
 
  /* ======================
       SIGNUP (NEW)
+      * Mock API response:
+      * POST  /auth/register
+      * → 201 Created
+      * → confirmation email sent
   ====================== */
   const signup = async ({ firstName, lastName, email, password, confirm }) => {
-
+    setLoading(true);
     setAuthMessage(null);
 
-    // 🔒 Basic validation
+    // Basic validation
     if (!firstName || !lastName || !email || !password) {
       throw new Error("Missing credentials");
     }
@@ -115,22 +95,32 @@ export function AuthProvider({ children }) {
       throw new Error("Passwords do not match");
     }
 
-    // ⏳ Mock API delay  /auth/register
-    await new Promise((res) => setTimeout(res, 800));
+    try{
+      const data = {
+        firstname: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        token: "8YUzw_tjotM_oqt9_8XxI" //fake captcha value to include todo
 
-    /**
-     * Mock API response:
-     * POST  /auth/register
-     * → 201 Created
-     * → confirmation email sent
-     */
-    localStorage.setItem("pending_signup_email", email); // add firstname lastname to thie as a user object later kanban addition
-
-    setAuthMessage({
-      type: "success",
-      text: "Check your email to confirm your account.",
-    });
-
+      }
+        const response = await registerApi( data );  
+       
+        localStorage.setItem("pending_signup_email", email); // add firstname lastname to this as a user object later kanban addition
+        setAuthMessage({
+          type: response.status,
+          text: response.message,
+        });
+    } catch (error){
+        console.log(error);  
+        setAuthMessage({
+            type: "failed",
+            text: error.message,
+          });
+    } finally { 
+      setLoading(false);
+    }
+   
     return true;
   };
 
@@ -139,42 +129,58 @@ export function AuthProvider({ children }) {
   ====================== */
 
   const login = async ({ email, password }) => {
-    /**
-     * Replace this with a real API call:
-     * const res = await api.post("/login", { email, password })
-     */
-/**.  /auth/login
-    * await fetch("http://localhost:8080/api/login", {
-   method: "POST",
-   */
-   // ⏳ Mock API delay
-    await new Promise((res) => setTimeout(res, 800));
-    
-    // Mock response
-    const fakeUser = {
-      id: "123",
-      email,
-      name: "Demo User",
-      token: "mock-jwt-token",
-      expiresAt: Date.now() + 1000 *60*60, //1 hour
-    };
-    
-    //console.log(fakeUser);
+ 
+    setLoading(true);
 
-    localStorage.setItem("auth_user", JSON.stringify(fakeUser));
-    setUser(fakeUser);
+    try {
 
+       const data = {
+        username: email,
+        password: password,
+        token: "8YUzw_tjotM_oqt9_8XxI" //fake captcha value to include
+      }
+    
+
+      const response = await loginApi( data );
+      setAuthMessage({
+        type: response.status,
+        text: response.message,
+      });
+        // Mock user todo : user from response after captcha
+      const fakeUser = {
+          id: "123",
+          email,
+          name: "Demo User",
+          token: "mock-jwt-token",
+          expiresAt: Date.now() + 1000 *60*60, //1 hour
+        };
+        
+        localStorage.setItem("auth_user", JSON.stringify(fakeUser));
+        setAuthUser(fakeUser);
+
+    } catch (error){
+        console.log(error);
+        setAuthMessage({
+          type: "failed",
+          text: error.message,
+        });
+
+    } finally {
+        setLoading(false);
+
+    }
     return fakeUser;
   };
  /* ======================
       LOGOUT   //  Logout success handler
   ====================== */
-  const logout = () => {
+  const logout = async() => {
    
     localStorage.removeItem("auth_user");
-    setUser(null);
+    
+    setAuthUser(null);
     // mock delay
-   
+    await new Promise((res) => setTimeout(res, 700));
 
     setAuthMessage({
       type: "success",
@@ -184,148 +190,137 @@ export function AuthProvider({ children }) {
     return true;
   };
 
-  /*** Handle Auth Messages  clear the mesage*/
-  const clearAuthMessage = () => {
-    setAuthMessage(null);
-  };
-
-  /* ======================
-      EMAIL CONFIRMATION LINK   
-  ====================== */
-  ///auth/reset-request
-
  
-const resendConfirmation = async (email) => {
-    if (!email) {
-      throw new Error("Missing email address");
-    }
-
-    // mock delay
-    await new Promise((res) => setTimeout(res, 700));
-
-    setAuthMessage({
-      type: "success",
-      text: "Confirmation email resent. Please check your inbox.",
-    });
-
-    return true;
-  };
 /* ======================
-    UPDATE PROFILE -- first/last name
-====================== */
-const updateProfile = async ({ firstName, lastName }) => {
-  if (!firstName || !lastName) {
-    throw new Error("Name fields cannot be empty");
-  }
-
-  const updatedUser = {
-    ...user,
-    firstName,
-    lastName,
-  };
-
-  localStorage.setItem("auth_user", JSON.stringify(updatedUser));
-  setUser(updatedUser);
-
-   // mock delay
-    await new Promise((res) => setTimeout(res, 700));
-
-    setAuthMessage({
-      type: "success",
-      text: "Your profile has been updated.",
-    });
-
-
-  return true;
-};
-
-/* ======================
-    PASSWORD RESET  // Email Link
+    PASSWORD RESET  // Email Link. //RequestPasswordReset
 ====================== */
 const requestPasswordReset = async (email) => {
+  setLoading(true);
   //hit reset endpoint 
   if (!email) {
     throw new Error("Missing email address");
   }
-/// /auth/reset-confirm
-  await new Promise((res) => setTimeout(res, 600));
 
-  setAuthMessage({
-    type: "success",
-    text: "Password reset link sent to your email.",
-  });
-};
+  try {
+ 
+      // /resetpassword 
+      const data = { 
+        email,  
+        token: "8YUzw_tjotM_oqt9_8XxI"
+      }
+      //console.log(data);
+      const response = await requestPasswordResetApi(data);
+      //console.log(response);
 
-/* ======================
-    EMAIL CHANGE -- /profile page
-====================== */
-const requestEmailChange = async (newEmail) => {
-  if (!newEmail) {
-    throw new Error("Email is required");
+      setAuthMessage({
+        type: response.status,
+        text: response.message,
+      });
+
+  } catch (error) {
+
+      console.log(error);
+      setAuthMessage({
+        type: "failed",
+        text: error.message,
+      });
+
+  } finally{
+      setLoading(false);
   }
 
-  await new Promise((res) => setTimeout(res, 600));
-
-  setAuthMessage({
-    type: "success",
-    text: "Email change confirmation sent. Check your inbox.",
-  });
-};
+  return true;
+};  
 
 /* ======================
-      Reset Password   //  Reset Password success handler Request Rest Form 
-  ====================== */
-const resetPassword = async ({ email, password, confirm, token }) => {
-    
-   // console.log(email + " " + password + " " +  confirm  + " " + token);
-
-    setAuthMessage(null);
-
-    // 🔒 Basic validation
-    if (!email || !password) {
-      throw new Error("Missing credentials");
-    }
-
-    if (password !== confirm) {
-      throw new Error("Passwords do not match");
-    }
-
-    // ⏳ Mock API delay.  /auth/reset-confirm
-    await new Promise((res) => setTimeout(res, 800));
-
-    /**
+      Reset Password   //  Reset Password success handler Request Rest Form
      * Mock API response:
      * POST /resetPassword
      * → 201 Created
      * → confirmation email sent
-     */
+  ====================== */
+const resetPassword = async ({ email, password, confirm,  tokenUrl, token }) => {
+    setLoading(true);
+    console.log(email + " " + password + " " +  confirm  + " " + token);
+    setAuthMessage(null);
+    // Basic validation
+    if (!email || !password) {
+      throw new Error("Missing credentials");
+    }
+    if (password !== confirm) {
+      throw new Error("Passwords do not match");
+    }
 
-    setAuthMessage({
-      type: "success",
-      text: "Your password has been reset. Please login.",
-    });
+    try {
+        
+        const data = { 
+              email,
+              password,
+              token,
+              tokenUrl
+            }
 
+        const response = await confirmPasswordResetApi(data);
+        setAuthMessage({
+          type: response.statue,
+          text: response.message,
+        });
+    } catch (err) {
+        console.log(err);
+        setAuthMessage({
+            type: "failure",
+            text: err.message,
+          });
+    } finally {
+      
+      setLoading(false);
+
+    }
     return true;
   };
 
+  const verifyEmailAccount = useCallback(
+    async ({ email, tokenUrl, token}) => {
+      setLoading(true);
+      try {
+            const data = {
+                email, 
+                token, //captcha
+                jwttoken: tokenUrl //e9a18f02b34fb36f01827d8e22dc585a
+              };
+            const response = await   verifyEmailApi(data);
+            setAuthMessage({
+              type: response.success ? "success" : "error",
+              text: response.message,
+            });
+          return response;
+      }catch(error){
+        console.log(error);
+        setAuthMessage({
+            type: "failure",
+            text: error.message,
+          });
+          throw error;
+
+      } finally{ 
+        setLoading(false);
+      }
+      
+    }, []
+  );
   const value = {
-    user,
-    isAuthenticated,
-    login,
-    signup,
-    logout,
-
-
-    updateProfile,
-    requestPasswordReset,
-    requestEmailChange,
-  
-    resendConfirmation,
-    resetPassword,
-    authMessage,
-    authReady,
-    clearAuthMessage,
-  };
+            authuser,
+            isAuthenticated,
+            login,
+            signup,
+            logout,
+            requestPasswordReset,
+            resetPassword,
+            verifyEmailAccount,
+            authMessage,
+            authReady,
+            clearAuthMessage,
+      };
 
 
   // Prevent route flicker before auth restores

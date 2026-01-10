@@ -4,10 +4,10 @@ import { CircleUserRound, LogIn, LogOut, User, Coffee, LayoutDashboard } from "l
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../../../context/AuthContext";
 
-export default function AccountDropdown({ darkMode, isLoggedIn }) {
+export default function AccountDropdown({ darkMode }) {
   
   const navigate = useNavigate();
-  const {logout} = useAuth();
+  const {logout, isAuthenticated} = useAuth();
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
@@ -37,7 +37,7 @@ export default function AccountDropdown({ darkMode, isLoggedIn }) {
         className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition bg-transparent
         `}
       >
-        <CircleUserRound size={20} />
+      <CircleUserRound size={20} color={darkMode ? "white" : "black"} />
       </button>
 
       {/* Dropdown */}
@@ -53,7 +53,7 @@ export default function AccountDropdown({ darkMode, isLoggedIn }) {
               ${darkMode ? "bg-slate-800 text-slate-100" : "bg-white text-blue-900"}
             `}
           >
-            {/* {!isLoggedIn ? ( */}
+            {!isAuthenticated ? (
               <>
                 <Link
                   to="/login"
@@ -74,9 +74,8 @@ export default function AccountDropdown({ darkMode, isLoggedIn }) {
                   </div>
                    <span className="hidden sm:inline block font-semibold text-white hover:text-indigo-500"> Create Account</span>
                 </Link>
-                <hr className="border-slate-600" />
               </>
-            {/* ) : ( */}
+             ) : ( 
               <>
                 <Link
                   to="/profile"
@@ -100,7 +99,7 @@ export default function AccountDropdown({ darkMode, isLoggedIn }) {
                   <span className="hidden sm:inline block font-semibold text-white hover:text-red-500"> Sign Out </span>
                 </button>
               </>
-            {/* )} */}
+             )} 
           </motion.div>
         )}
       </AnimatePresence>

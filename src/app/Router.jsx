@@ -7,6 +7,7 @@ import PublicOnlyRoute from "./routes/PublicOnlyRoute";
 
 
 import AuthLayout from '../features/auth/components/layout/AuthLayout';
+import UnAuthLayout from '../features/auth/components/layout/UnAuthLayout';
 import LoginPage from '../features/auth/pages/LoginPage';
 import SignupPage from '../features/auth/pages/SignupPage';
 import ConfirmEmailPage from '../features/auth/pages/ConfirmEmailPage';
@@ -22,8 +23,7 @@ function AppRouter() {
   return (
      <Routes>
       {/** AUTH PAGES (public only) */}
-        <Route element={<AuthLayout  darkMode={darkMode}  setDarkMode={setDarkMode} />} >
-
+        <Route element={<UnAuthLayout  darkMode={darkMode}  setDarkMode={setDarkMode} />} >
           <Route element={<PublicOnlyRoute />}>
             <Route path="/login" element={<LoginPage darkMode={darkMode} />} />
             {/** reset password section enter email for reset to be sent to.  */}
@@ -34,16 +34,18 @@ function AppRouter() {
             {/** signup section  */}
             <Route path="/signup" element={<SignupPage darkMode={darkMode} />} />
             {/** lander from email link after creating account. */}
-            <Route path="/confirm-email" element={<ConfirmEmailPage darkMode={darkMode} />} />
+            <Route path="/verify" element={<ConfirmEmailPage darkMode={darkMode} />} />
             {/** end signup section link to login */}
           </Route>
         </Route>
         {/** PROTECTED ROUTES - must be logged in */}
-        <Route element={<ProtectedRoute />}>
-          {/** User Landing page   */}
-          <Route path="/profile" element={<ProfilePage darkMode={darkMode} />} />
-          {/** end signup section link to login */}
-        </Route>  
+       <Route element={<AuthLayout  darkMode={darkMode}  setDarkMode={setDarkMode} />} >
+          <Route element={<ProtectedRoute />}>
+            {/** User Landing page   */}
+            <Route path="/profile" element={<ProfilePage darkMode={darkMode} />} />
+            {/** end signup section link to login */}
+          </Route>  
+        </Route>
         {/* Fallback */}
         <Route path="/not-found" element={<NotFoundPage darkMode={darkMode}  />} />
         {/* wildcard catch-all */}

@@ -33,38 +33,7 @@ export default function LoginForm({ darkMode }) {
     
   };
   
-/***
- * 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-   // clearAuthMessage();
 
-    try{
-       //await login({ email, password });
-       //console.log("loggedIn");
-       navigate("/user-dashboard", { replace: true });
-   
-    }catch (err) {
-      setError(err.message);
-      //console.log(err.message);
-    }
-  };
-
-  /**
-   * 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await login({ email, password });
-    navigate("/", { replace: true });
-  };
-   * await fetch("http://localhost:8080/api/login", {
-  method: "POST",
-  …
-});
-
- */
- 
   return (
     <>
           { authMessage && (

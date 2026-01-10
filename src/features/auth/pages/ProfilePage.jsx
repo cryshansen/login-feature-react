@@ -16,9 +16,7 @@ export default function ProfilePage({ darkMode }) {
   //usercontexts use with authContext 
   const {
     user,
-    updateProfile,
     requestPasswordReset,
-    requestEmailChange,
     authMessage,
     clearAuthMessage,
   } = useAuth();
@@ -38,7 +36,7 @@ export default function ProfilePage({ darkMode }) {
       clearAuthMessage();
 
     try {
-     await requestEmailChange(newEmail);
+    
        navigate("/profile", { replace: true });
    
       setNewEmail("");
@@ -68,7 +66,7 @@ export default function ProfilePage({ darkMode }) {
       clearAuthMessage();
 
     try {
-      await updateProfile({ firstName, lastName });
+     
       navigate("/profile", { replace: true });
    
     } catch (err) {
