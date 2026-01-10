@@ -1,64 +1,50 @@
-import { createContext, useContext, useEffect, useState,useCallback } from "react";
-// context/AuthContext.tsx
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import {
   login as loginApi,
   register as registerApi,
-  requestPasswordResetApi, //send email to update pasword
-  confirmPasswordResetApi, //send password 
-  verifyEmailApi //after signup receive email, click link, page handles data and sends email validation to server. 
+  requestPasswordResetApi,
+  confirmPasswordResetApi,
+  verifyEmailApi,
 } from "../features/api/services/auth.service";
 
 const AuthContext = createContext(null);
 
-/**
- * 
- * @param {*} param0 
- * @returns 
- */
 export function AuthProvider({ children }) {
-
-  //const [user, setUser] = useState(null);
-  const [authuser, setAuthUser] = useState(() => {
-      try {
-        return JSON.parse(localStorage.getItem("auth_user"));
-      } catch {
-        return null;
-      }
-  });
-
-
+  const [authuser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [authMessage, setAuthMessage] = useState(null);
   const [authReady, setAuthReady] = useState(false);
 
+  /* ======================
+      Restore auth on app load
+  ====================== */
   useEffect(() => {
-    setAuthReady(true);
-  }, []);
+    try {
+      const stored = localStorage.getItem("auth_user");
+      if (!stored) {
+        setAuthReady(true);
+        return;
+      }
 
-  // 🔹 Restore auth on refresh
-  useEffect(() => {
-    const storedUser = localStorage.getItem("auth_user");
-    if (!storedUser) {
-      setLoading(false);
-      return;
-    }
-    
-    const parsed = JSON.parse(storedUser);
+      const parsed = JSON.parse(stored);
 
-    if (parsed.expiresAt < Date.now()) {
+      if (parsed.expiresAt && parsed.expiresAt < Date.now()) {
+        localStorage.removeItem("auth_user");
+        setAuthUser(null);
+      } else {
+        setAuthUser(parsed);
+      }
+    } catch {
       localStorage.removeItem("auth_user");
       setAuthUser(null);
-      setAuthMessage({
-        type: "info",
-        text: "Your session has expired. Please log in again.",
-      });
-    } else {
-      setAuthUser(parsed);
+    } finally {
+      setAuthReady(true);
     }
-
-    setLoading(false);
   }, []);
 
+  /* ======================
+      Persist auth changes
+  ====================== */
   useEffect(() => {
     if (authuser) {
       localStorage.setItem("auth_user", JSON.stringify(authuser));
@@ -67,268 +53,201 @@ export function AuthProvider({ children }) {
     }
   }, [authuser]);
 
+  const isAuthenticated =
+    !!authuser &&
+    !!authuser.token &&
+    (!authuser.expiresAt || authuser.expiresAt > Date.now());
 
-  const isAuthenticated = !!authuser&& !!authuser.token && (!authuser.expiresAt || authuser.expiresAt > Date.now());
- /*** Handle Auth Messages  clear the mesage*/
-  const clearAuthMessage = () => {
-    setAuthMessage(null);
-  };
+  const clearAuthMessage = () => setAuthMessage(null);
 
-
- /* ======================
-      SIGNUP (NEW)
-      * Mock API response:
-      * POST  /auth/register
-      * → 201 Created
-      * → confirmation email sent
+  /* ======================
+      SIGNUP
   ====================== */
   const signup = async ({ firstName, lastName, email, password, confirm }) => {
     setLoading(true);
     setAuthMessage(null);
 
-    // Basic validation
     if (!firstName || !lastName || !email || !password) {
       throw new Error("Missing credentials");
     }
-
     if (password !== confirm) {
       throw new Error("Passwords do not match");
     }
 
-    try{
-      const data = {
-        firstname: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        token: "8YUzw_tjotM_oqt9_8XxI" //fake captcha value to include todo
-
-      }
-        const response = await registerApi( data );  
-       
-        localStorage.setItem("pending_signup_email", email); // add firstname lastname to this as a user object later kanban addition
-        setAuthMessage({
-          type: response.status,
-          text: response.message,
-        });
-    } catch (error){
-        console.log(error);  
-        setAuthMessage({
-            type: "failed",
-            text: error.message,
-          });
-    } finally { 
-      setLoading(false);
-    }
-   
-    return true;
-  };
-
- /* ======================
-      LOGIN   //  Login success handler
-  ====================== */
-
-  const login = async ({ email, password }) => {
- 
-    setLoading(true);
-
     try {
+      const response = await registerApi({
+        firstname: firstName,
+        lastName,
+        email,
+        password,
+        token: "8YUzw_tjotM_oqt9_8XxI",
+      });
 
-       const data = {
-        username: email,
-        password: password,
-        token: "8YUzw_tjotM_oqt9_8XxI" //fake captcha value to include
-      }
-    
+      localStorage.setItem("pending_signup_email", email);
 
-      const response = await loginApi( data );
       setAuthMessage({
         type: response.status,
         text: response.message,
       });
-        // Mock user todo : user from response after captcha
-      const fakeUser = {
-          id: "123",
-          email,
-          name: "Demo User",
-          token: "mock-jwt-token",
-          expiresAt: Date.now() + 1000 *60*60, //1 hour
-        };
-        
-        localStorage.setItem("auth_user", JSON.stringify(fakeUser));
-        setAuthUser(fakeUser);
 
-    } catch (error){
-        console.log(error);
-        setAuthMessage({
-          type: "failed",
-          text: error.message,
-        });
-
+      return response;
     } finally {
-        setLoading(false);
-
+      setLoading(false);
     }
-    return fakeUser;
   };
- /* ======================
-      LOGOUT   //  Logout success handler
+
+  /* ======================
+      LOGIN (REAL PERSISTENCE)
   ====================== */
-  const logout = async() => {
-   
+  const login = async ({ email, password }) => {
+    setLoading(true);
+    setAuthMessage(null);
+
+    try {
+      const response = await loginApi({
+        username: email,
+        password,
+        token: "8YUzw_tjotM_oqt9_8XxI",
+      });
+
+      // 🔑 EXPECT THIS FROM BACKEND
+      const user = {
+        id: response.user.id,
+        email: response.user.email,
+        name: response.user.name,
+        token: response.token,
+        expiresAt: response.expiresAt, // optional
+      };
+
+      setAuthUser(user);
+
+      setAuthMessage({
+        type: "success",
+        text: response.message,
+      });
+
+      return user;
+    } catch (error) {
+      setAuthMessage({
+        type: "failed",
+        text: error.message,
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ======================
+      LOGOUT
+  ====================== */
+  const logout = async () => {
     localStorage.removeItem("auth_user");
-    
     setAuthUser(null);
-    // mock delay
-    await new Promise((res) => setTimeout(res, 700));
 
     setAuthMessage({
       type: "success",
-      text: "Youve been logged out.",
+      text: "You've been logged out.",
     });
 
     return true;
   };
 
- 
-/* ======================
-    PASSWORD RESET  // Email Link. //RequestPasswordReset
-====================== */
-const requestPasswordReset = async (email) => {
-  setLoading(true);
-  //hit reset endpoint 
-  if (!email) {
-    throw new Error("Missing email address");
-  }
-
-  try {
- 
-      // /resetpassword 
-      const data = { 
-        email,  
-        token: "8YUzw_tjotM_oqt9_8XxI"
-      }
-      //console.log(data);
-      const response = await requestPasswordResetApi(data);
-      //console.log(response);
+  /* ======================
+      PASSWORD RESET
+  ====================== */
+  const requestPasswordReset = async (email) => {
+    setLoading(true);
+    try {
+      const response = await requestPasswordResetApi({
+        email,
+        token: "8YUzw_tjotM_oqt9_8XxI",
+      });
 
       setAuthMessage({
         type: response.status,
         text: response.message,
       });
 
-  } catch (error) {
-
-      console.log(error);
-      setAuthMessage({
-        type: "failed",
-        text: error.message,
-      });
-
-  } finally{
+      return response;
+    } finally {
       setLoading(false);
-  }
-
-  return true;
-};  
-
-/* ======================
-      Reset Password   //  Reset Password success handler Request Rest Form
-     * Mock API response:
-     * POST /resetPassword
-     * → 201 Created
-     * → confirmation email sent
-  ====================== */
-const resetPassword = async ({ email, password, confirm,  tokenUrl, token }) => {
-    setLoading(true);
-    console.log(email + " " + password + " " +  confirm  + " " + token);
-    setAuthMessage(null);
-    // Basic validation
-    if (!email || !password) {
-      throw new Error("Missing credentials");
     }
+  };
+
+  const resetPassword = async ({ email, password, confirm, tokenUrl, token }) => {
+    setLoading(true);
+
     if (password !== confirm) {
       throw new Error("Passwords do not match");
     }
 
     try {
-        
-        const data = { 
-              email,
-              password,
-              token,
-              tokenUrl
-            }
+      const response = await confirmPasswordResetApi({
+        email,
+        password,
+        token,
+        tokenUrl,
+      });
 
-        const response = await confirmPasswordResetApi(data);
-        setAuthMessage({
-          type: response.statue,
-          text: response.message,
-        });
-    } catch (err) {
-        console.log(err);
-        setAuthMessage({
-            type: "failure",
-            text: err.message,
-          });
+      setAuthMessage({
+        type: "success",
+        text: response.message,
+      });
+
+      return response;
     } finally {
-      
       setLoading(false);
-
     }
-    return true;
   };
 
-  const verifyEmailAccount = useCallback(
-    async ({ email, tokenUrl, token}) => {
-      setLoading(true);
-      try {
-            const data = {
-                email, 
-                token, //captcha
-                jwttoken: tokenUrl //e9a18f02b34fb36f01827d8e22dc585a
-              };
-            const response = await   verifyEmailApi(data);
-            setAuthMessage({
-              type: response.success ? "success" : "error",
-              text: response.message,
-            });
-          return response;
-      }catch(error){
-        console.log(error);
-        setAuthMessage({
-            type: "failure",
-            text: error.message,
-          });
-          throw error;
+  const verifyEmailAccount = useCallback(async ({ email, tokenUrl, token }) => {
+    setLoading(true);
+    try {
+      const response = await verifyEmailApi({
+        email,
+        token,
+        jwttoken: tokenUrl,
+      });
 
-      } finally{ 
-        setLoading(false);
-      }
-      
-    }, []
-  );
-  const value = {
-            authuser,
-            isAuthenticated,
-            login,
-            signup,
-            logout,
-            requestPasswordReset,
-            resetPassword,
-            verifyEmailAccount,
-            authMessage,
-            authReady,
-            clearAuthMessage,
-      };
+      setAuthMessage({
+        type: response.success ? "success" : "error",
+        text: response.message,
+      });
 
+      return response;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  // Prevent route flicker before auth restores
-  if (loading) {
-    return <div className="app-splash">Loading...</div>; // or spinner
+  /* ======================
+      Guard bootstrapping
+  ====================== */
+  if (!authReady) {
+    return <div className="app-splash">Loading...</div>;
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        authuser,
+        isAuthenticated,
+        authReady,
+        loading,
+        login,
+        signup,
+        logout,
+        requestPasswordReset,
+        resetPassword,
+        verifyEmailAccount,
+        authMessage,
+        clearAuthMessage,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
