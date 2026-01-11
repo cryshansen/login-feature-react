@@ -26,7 +26,7 @@ export default function ProfilePage({ darkMode }) {
     const [lastName, setLastName] = useState(user?.lastName ?? "");
     const [newEmail, setNewEmail] = useState("");
     const [error, setError] = useState(null);
-    const fakeUser = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
+   // const fakeUser = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
     const userTest = fakeUser.email; // for testing without auth
 
    const handleEmailChange = async () => {
