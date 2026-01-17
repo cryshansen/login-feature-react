@@ -10,7 +10,7 @@ export default function ConfirmEmailPage({darkMode}) {
   const email =  searchParams.get("email");
 //verifyEmail page. TODO: integrate with api. need params from email link to confirm on page landing.
 
- const { verifyEmailAccount, authMessage, authReady, setAuthMessage } = useAuth();
+ const { verifyEmailAccount, authMessage, setAuthMessage } = useAuth();
  
   const [error, setError] = useState(null);
   const captchaToken="ABVCret_45FDSxs_23Rtfs" //captcha blocking bot access essentially / could be cloudfare
@@ -43,7 +43,7 @@ export default function ConfirmEmailPage({darkMode}) {
     
    runVerification();
 
-  }, []);
+  }, [email, setAuthMessage, tokenUrl, verifyEmailAccount]);
 
   return (
     <AuthBackground darkMode={darkMode}>

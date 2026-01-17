@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useSearchParams,useNavigate } from "react-router-dom";
+import  { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 
 import ConfirmPasswordFields from "./ConfirmPasswordFields";
@@ -14,7 +14,7 @@ export default function ConfirmResetForm({ darkMode }) {
   const tokenUrl = searchParams.get("token");
   const email =  searchParams.get("email");
 
-  const navigate = useNavigate();
+
   const { resetPassword, authMessage, clearAuthMessage } = useAuth();
 
   const [password, setPassword] = useState("");
@@ -35,14 +35,19 @@ export default function ConfirmResetForm({ darkMode }) {
   const handleSubmit = async (e) => {
 
      e.preventDefault();
+
+     if(!canSubmit){
+        setError("The password strength score must be atleast 3. Please adjust your password.")
+        return ;
+      }
+
+
      clearAuthMessage();
      setError(null);
      setToken("8YUzw_tjotM_oqt9_8XxI"); //not taking effect
 
      try {
-         console.log(email + "  " + password + "  " +  tokenUrl  + "  " + token);
           await resetPassword({ email, password, confirm, tokenUrl, token });
-          //navigate("/login", { replace: true });
      } catch (error) {
        setError(error.message);
      }

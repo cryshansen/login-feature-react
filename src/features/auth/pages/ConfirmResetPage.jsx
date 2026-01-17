@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 
 import AuthBackground from "../components/elements/AuthBackground";
 import ConfirmResetForm from "../components/forms/ConfirmResetForm";

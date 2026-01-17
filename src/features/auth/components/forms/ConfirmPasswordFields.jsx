@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import PasswordRules from "./PasswordRules";
@@ -20,8 +20,6 @@ export default function ConfirmPasswordFields({
   const [touched, setTouched] = useState(false);
 
   const rules = getPasswordRules(password, confirm);
-
-
   const passwordsMatch = password && confirm && password === confirm;
 
   return (
@@ -52,9 +50,9 @@ export default function ConfirmPasswordFields({
               text-gray-400 hover:text-gray-200"
           >
             {showPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
+              <EyeIcon className="h-5 w-5" /> 
             ) : (
-              <EyeIcon className="h-5 w-5" />
+             <EyeSlashIcon className="h-5 w-5" />
             )}
           </button>
         </div>
@@ -92,9 +90,9 @@ export default function ConfirmPasswordFields({
                 text-gray-400 hover:text-gray-200"
             >
               {showConfirmPassword ? (
-                <EyeSlashIcon className="h-5 w-5" />
+                 <EyeIcon className="h-5 w-5" /> 
               ) : (
-                <EyeIcon className="h-5 w-5" />
+                <EyeSlashIcon className="h-5 w-5" />
               )}
             </button>
           </div>

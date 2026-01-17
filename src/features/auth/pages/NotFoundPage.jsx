@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+
+import {  Link } from "react-router-dom";
 
 import AuthBackground from "../components/elements/AuthBackground";
 

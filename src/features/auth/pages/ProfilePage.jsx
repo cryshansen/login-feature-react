@@ -15,19 +15,19 @@ export default function ProfilePage({ darkMode }) {
 
   //usercontexts use with authContext 
   const {
-    user,
+    authuser,
     requestPasswordReset,
     authMessage,
     clearAuthMessage,
   } = useAuth();
 
   //Parent owns the State for the form fields
-    const [firstName, setFirstName] = useState(user?.firstName ?? "");
-    const [lastName, setLastName] = useState(user?.lastName ?? "");
+    const [firstName, setFirstName] = useState(authuser?.firstName ?? "");
+    const [lastName, setLastName] = useState(authuser?.lastName ?? "");
     const [newEmail, setNewEmail] = useState("");
     const [error, setError] = useState(null);
-    const fakeUser = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
-    const userTest = fakeUser.email; // for testing without auth
+   // const fakeUser = { firstname:"Bob",lastName:"Smith", email:"test@test.com", password:'' }
+    const userTest = authuser?.email ?? ""; // for testing without auth
 
    const handleEmailChange = async () => {
       //requestEmailChange({ email: user.email }) // needs new and old email so can switch and trace tag in kanban
@@ -51,7 +51,7 @@ export default function ProfilePage({ darkMode }) {
     clearAuthMessage();
 
     try {
-      await requestPasswordReset({  email: userTest });
+      await requestPasswordReset({ userTest });
       navigate("/profile", { replace: true });
    
     } catch (err) {

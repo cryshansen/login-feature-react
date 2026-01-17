@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
@@ -9,35 +9,43 @@ import { useAuth } from "../../../../context/AuthContext";
 export default function LoginForm({ darkMode }) {
 
   const navigate = useNavigate();
-  //addition of auth context.   //const {login} = useAuth();
-  const { login, authMessage, clearAuthMessage, isAuthenticated } = useAuth();
+  //addition of auth context.   
+  const { login, authMessage, clearAuthMessage, authuser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState();
+  useEffect(()=>{
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/profile");
+    if(authuser){
+      navigate("/profile",{replace:true});
     }
-  }, [isAuthenticated, navigate]);
+
+  },[ authuser, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     clearAuthMessage();
    try {
       await login({ email, password });
+
     } catch (err) {
       // handled by auth state
+       setError(err.message);
+      
     }
     
   };
   
-
   return (
     <>
           { authMessage && (
             <p className="text-sm text-indigo-400">{authMessage.text}</p>
+          )}
+
+          { error && (
+            <p className="text-sm text-indigo-400">{error}</p>
           )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>

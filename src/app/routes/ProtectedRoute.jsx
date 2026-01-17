@@ -1,6 +1,7 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import GuardLoader from "./GuardLoader";
 
 /**
  * 🔒 ProtectedRoute
@@ -18,18 +19,16 @@ import { useAuth } from "../../context/AuthContext";
  * - If authenticated → allow access via <Outlet />
  */
 export default function ProtectedRoute() {
-  const { isAuthenticated, authReady } = useAuth();
+  const { authReady, authuser } = useAuth();
 
   // Prevent redirect flicker while auth state initializes
   if (!authReady) {
-    return <div>Loading...</div>;
+    return <GuardLoader />;
   }
-
-  // Block unauthenticated users
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  // if(!authuser){
+  //   return <Navigate to="/login" replace />;
+  // }
 
   // User is authenticated → render protected page
-  return <Outlet />;
+  return authuser ? <Outlet /> : <Navigate to="/login" replace />;
 }

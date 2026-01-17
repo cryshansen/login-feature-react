@@ -1,29 +1,5 @@
-import React from "react"; 
-import { Sun, Moon, House, Sparkles,BrainCircuit, Bookmark,HeartHandshake  } from "lucide-react";
-import { Link } from "react-router-dom";
 
-import { useState } from 'react'
-import {
-  Dialog,
-  DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
-} from '@headlessui/react'
-import {
-  ArrowPathIcon,
-  Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+import { Link } from "react-router-dom";
 
 import AccountDropdown from "../elements/AccountDropdown";
 

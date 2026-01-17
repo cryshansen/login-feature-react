@@ -11,6 +11,16 @@ import { API_CONFIG } from "../../../config/env";
 // take AUTH_BASE_URL and assign (:) it to api_base_url
 // const { AUTH_BASE_URL : API_BASE_URL } = API_CONFIG;
 const  AUTH_BASE_URL  = API_CONFIG.AUTH_BASE_URL;
+
+export function meApi(
+): Promise<MessageResponse> {
+
+  return request<MessageResponse>(`${AUTH_BASE_URL}/me`, {
+    method: "GET",
+    credentials: "include"
+  });
+}
+
 /**
  * Login
  * POST /users/signin

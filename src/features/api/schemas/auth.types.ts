@@ -1,7 +1,7 @@
 
 export interface LoginRequest {
   username:string; ///  email field;
-  password: string
+  password: string;
   token:string; //captcha
 }
 
@@ -37,16 +37,16 @@ export interface RequestPasswordReset{
 // submit the reset password form 3 fields. email in url parameter
 export interface PasswordReset {
   email: string;  //addition added to back end
-  password: string,
-  tokenUrl: string, //
-  token: string, //captcha 
+  password: string;
+  tokenUrl: string; //
+  token: string; //captcha 
 }
 
 // endpoint for the signup flow land on the site and verify email. 
 export interface VerifyEmail {
-  email: string,
-  token: string,
-  jwttoken: string
+  email: string;
+  token: string;
+  jwttoken: string;
 }
 
 
