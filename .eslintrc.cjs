@@ -64,6 +64,16 @@ module.exports = {
             from: "./src/features/api",
             message: "Contexts must not import API services directly",
           },
+          {
+            target: "./src/features/api",
+            from: "./src/forms",
+            message: "Forms must not access API layer",
+          },
+          {
+            target: "./src/features/api",
+            from: "./src/context",
+            message: "Context must be the API boundary",
+          },
         ],
       },
     ],
@@ -73,6 +83,62 @@ module.exports = {
             name: "requestPasswordReset",
             message: "Use requestPasswordResetApi for API calls"
         }
+    ],
+    /* =========================
+      UI IMPORT CONVETNTIONS 
+    ========================= */
+    "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/*Request*"],
+              message:
+                "UI and Context must not import *Request types. Translate Args → Request inside the context.",
+            },
+          ],
+        },
+      ],
+
+    /* =========================
+      NAMING CONVENTIONS 
+    ========================= */
+    "@typescript-eslint/naming-convention": [
+      "error",
+
+      // Interfaces
+      {
+        selector: "interface",
+        format: ["PascalCase"],
+        custom: {
+          regex: "(Args|Request|Response|ContextValue|User)$",
+          match: true,
+        },
+      },
+
+      // Type aliases
+      {
+        selector: "typeAlias",
+        format: ["PascalCase"],
+        custom: {
+          regex: "(Args|Request|Response)$",
+          match: true,
+        },
+      },
+    ],
+    /* ======================
+     AUTHMESSAGE TYPE ENUM ENFORCEMENT
+    ======================== */
+    "@typescript-eslint/no-restricted-types": [
+      "error",
+      {
+        types: {
+          string: {
+            message:
+              "Do not use `string` for auth message types. Use AuthMessageType instead.",
+          },
+        },
+      },
     ],
 
     /* =========================
@@ -89,6 +155,57 @@ module.exports = {
     "no-console": ["warn", { allow: ["warn", "error"] }],
     
   },
+  overrides: [
+    {
+      files: ["src/features/api/services/**/*.{ts,tsx}"],
+      rules: {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "parameter",
+            format: ["camelCase"],
+            custom: {
+              regex: "Request$",
+              match: true,
+            },
+          },
+        ],
+      },
+    },
+    {
+      files: ["src/context/**/*.{ts,tsx}"],
+      rules: {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "parameter",
+            format: ["camelCase"],
+            custom: {
+              regex: "Args$",
+              match: true,
+            },
+          },
+        ],
+      },
+    },
+    {
+      files: ["src/**/AuthContext*.{ts,tsx}"],
+      rules: {
+        "@typescript-eslint/no-restricted-types": [
+          "error",
+          {
+            types: {
+              string: {
+                message:
+                  "Auth message `type` must use AuthMessageType union.",
+              },
+            },
+          },
+        ],
+      },
+    },
+
+  ],
 
   settings: {
     react: {

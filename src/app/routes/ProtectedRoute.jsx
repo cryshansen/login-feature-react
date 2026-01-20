@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import GuardLoader from "./GuardLoader";
 
 /**
- * 🔒 ProtectedRoute
+ * 🔒 ProtectedRoute  RequireAuth.test.jsx runs against this froute
  *
  * Guards routes that REQUIRE authentication.
  *
@@ -25,9 +25,6 @@ export default function ProtectedRoute() {
   if (!authReady) {
     return <GuardLoader />;
   }
-  // if(!authuser){
-  //   return <Navigate to="/login" replace />;
-  // }
 
   // User is authenticated → render protected page
   return authuser ? <Outlet /> : <Navigate to="/login" replace />;

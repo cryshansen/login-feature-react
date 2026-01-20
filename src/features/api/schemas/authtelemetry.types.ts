@@ -9,10 +9,13 @@ export type AuthTelemetryEvent =
   | "signup_failure"
   | "token_expired"
   | "password_reset_requested"
+  | "password_reset_requested_failure"
   | "password_reset_submit" 
+  | "password_reset_submit_failure" 
   | "user_logout"
   | "logout_failure"
-  | "verify_email";
+  | "verify_email"
+  | "verify_email_failure";
 
 
 // general response typed output
