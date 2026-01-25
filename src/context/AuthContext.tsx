@@ -9,7 +9,7 @@ import {
 } from "../features/api/services/auth.service";
 import type {AuthUser, AuthContextValue, SignupArgs, LoginArgs, MessageResponse,RequestPasswordResetArgs,VerifyEmailArgs,PasswordResetArgs, AuthMessageMap} from "../features/api/schemas/auth.types";
 import { emitAuthEvent } from "../features/api/services/authTelemetry.service";
-
+import { useLoading } from "../context/LoadingContext";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -18,6 +18,10 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children } : AuthProviderProps) {
 
+
+  const { showLoader, hideLoader } = useLoading();
+   
+  
   const [authuser, setAuthUser] = useState<AuthUser | null>(null);
   const [authMessage, setAuthMessage] = useState<AuthMessageMap | null>(null);
 
@@ -116,7 +120,8 @@ export function AuthProvider({ children } : AuthProviderProps) {
       SIGNUP
   ====================== */
   const signup = async ({ email, firstName, lastName,  password, confirm }:SignupArgs): Promise<MessageResponse> => {
-    setLoading(true);
+   // setLoading(true);
+        showLoader();
     setAuthMessage(null);
 
     if (!firstName || !lastName || !email || !password) {
@@ -152,7 +157,8 @@ export function AuthProvider({ children } : AuthProviderProps) {
       emitAuthEvent("signup_failure", { email, error: err.message });
       throw err;
     } finally {
-      setLoading(false);
+      //setLoading(false);
+      hideLoader();
     }
   };
 
@@ -160,7 +166,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       LOGIN
   ====================== */
   const login = async ({ email, password }:LoginArgs): Promise<MessageResponse> => {
-    setLoading(true);
+    showLoader();
     setAuthMessage(null);
 
     try {
@@ -188,7 +194,8 @@ export function AuthProvider({ children } : AuthProviderProps) {
       emitAuthEvent("login_failure", { email, error: err.message });
       throw err;
     } finally {
-      setLoading(false);
+      //setLoading(false);
+      hideLoader();
     }
   };
 
@@ -196,7 +203,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       LOGOUT
   ====================== */
   const logout = async () :Promise<MessageResponse>=> {
-    setLoading(true);
+    showLoader()
     setAuthMessage(null);
 
     try {
@@ -208,7 +215,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       emitAuthEvent("user_logout");
       return { message: "You've been logged out." ,  success: true };
     } finally {
-      setLoading(false);
+      hideLoader();
     }
   };
 
@@ -216,7 +223,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       PASSWORD RESET
   ====================== */
   const requestPasswordReset = async ({ email }:RequestPasswordResetArgs):Promise <MessageResponse> => {
-    setLoading(true);
+         showLoader();
     try {
       /**RequestPasswordResetRequest payload*/
       const response = await requestPasswordResetApi({
@@ -241,7 +248,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       emitAuthEvent("password_reset_requested_failure", { email, error: err.message });
       throw err;
     } finally {
-      setLoading(false);
+      hideLoader();
     }
   };
 
@@ -249,7 +256,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       RESET PASSWORD
   ====================== */
   const resetPassword = async ({ email, password, confirm, tokenUrl, token }:PasswordResetArgs) :Promise<MessageResponse> => {
-    setLoading(true);
+         showLoader();
 
     if (password !== confirm) {
       throw new Error("Passwords do not match");
@@ -271,7 +278,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       emitAuthEvent("password_reset_submit", { email });
       return response;
     } finally {
-      setLoading(false);
+      hideLoader();
     }
   };
 
@@ -279,7 +286,7 @@ export function AuthProvider({ children } : AuthProviderProps) {
       VERIFY EMAIL
   ====================== */
   const verifyEmailAccount = useCallback(async ({ email, tokenUrl, token }:VerifyEmailArgs):Promise<MessageResponse> => {
-    setLoading(true);
+         showLoader();
     try {
       const response = await verifyEmailApi({
         email,
@@ -295,16 +302,16 @@ export function AuthProvider({ children } : AuthProviderProps) {
       emitAuthEvent("verify_email", { email });
       return response;
     } finally {
-      setLoading(false);
+      hideLoader();
     }
   }, []);
 
   /* =====================================================
      BLOCK UI UNTIL READY
   ===================================================== */
-  if (!authReady) {
-    return <div className="app-splash">Loading...</div>;
-  }
+  // if (!authReady) {
+  //   return showLoader();
+  // }
 
   return (
     <AuthContext.Provider
