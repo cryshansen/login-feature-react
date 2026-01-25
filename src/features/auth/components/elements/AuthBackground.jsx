@@ -1,7 +1,3 @@
-import React, { useState } from "react";
-import { Link  } from 'react-router-dom';
-
-//import FrontFacingHeader from "../Layout/FrontFacingHeader";
 
 
 export default function AuthBackground({ children, darkMode }) {

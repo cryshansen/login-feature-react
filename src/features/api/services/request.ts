@@ -9,11 +9,13 @@ export async function request<T>(
 
   try {
     const response = await fetch(url, {
+      credentials: "include", //default all requests 
+      ...options,
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {})
       },
-      ...options
+
     });
 
     if (!response.ok) {
@@ -29,14 +31,17 @@ export async function request<T>(
       throw new Error(message);
     }
 
-    console.log(response);
+    //console.log(response);
     const data = await response.json();
-      console.log(data);
-      return data;
+    console.log(data);
+    return data;
     //return response.json();
 
   } catch (error) {
-    console.error("API request failed:", error);
+  //  console.error("API request failed:", error);
     throw error;
   }
 }
+//Abc234&5
+
+//token for reset password is missing /resetpassword?token=&email=test2@test.com

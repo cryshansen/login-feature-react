@@ -1,16 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CircleUserRound, LogIn, LogOut, User, Coffee, LayoutDashboard } from "lucide-react";
+import { CircleUserRound, LogIn, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../../../context/AuthContext";
 
 export default function AccountDropdown({ darkMode }) {
   
   const navigate = useNavigate();
-  const {logout, isAuthenticated} = useAuth();
+  const {logout, authuser, authReady} = useAuth();
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+
+  const isAuthenticated = authReady && authuser !== null;
 
   // Close dropdown when clicking outside
   useEffect(() => {

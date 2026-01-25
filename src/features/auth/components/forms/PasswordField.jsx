@@ -47,9 +47,9 @@ export default function PasswordInput({
                 className="absolute inset-y-1 right-0 flex items-center bg-transparent py-3 px-3 text-gray-400 hover:text-gray-200"
             >
                 {showPassword ? (
-                <EyeSlashIcon className="h-5 w-5" />
-                ) : (
                 <EyeIcon className="h-5 w-5" />
+                ) : (
+                <EyeSlashIcon className="h-5 w-5" />              
                 )}
             </button>
         </div>

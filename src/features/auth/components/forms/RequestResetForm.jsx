@@ -1,15 +1,10 @@
-import React from "react";
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import EmailField from "./EmailField";
-
 
 import { useAuth } from "../../../../context/AuthContext";
 
 export default function RequestResetForm({ darkMode }) {
 
-  const navigate = useNavigate();
   //addition of auth context.
   const { requestPasswordReset  , authMessage, clearAuthMessage } = useAuth();
 
@@ -23,7 +18,6 @@ export default function RequestResetForm({ darkMode }) {
     console.log(e);
     try{
       await requestPasswordReset({ email });
-      //navigate("/login", { replace: true });
    
     }catch (err) {
       setError(err.message);

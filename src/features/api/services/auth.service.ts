@@ -2,8 +2,9 @@
 // same as auth.api.ts but black box connection
 
 import { request } from "./request";
-import { LoginRequest, AuthResponse, RegisterRequest, RequestPasswordReset, PasswordReset,
-  VerifyEmail, MessageResponse, AuthUser } from "../schemas/auth.types";
+import { LoginRequest, AuthResponse, RegisterRequest, RequestPasswordResetRequest,PasswordResetRequest,
+  VerifyEmailRequest, MessageResponse, MeResponse, 
+  LoginResponse, AuthUser} from "../schemas/auth.types";
 import { API_CONFIG } from "../../../config/env";
 
 
@@ -11,18 +12,28 @@ import { API_CONFIG } from "../../../config/env";
 // take AUTH_BASE_URL and assign (:) it to api_base_url
 // const { AUTH_BASE_URL : API_BASE_URL } = API_CONFIG;
 const  AUTH_BASE_URL  = API_CONFIG.AUTH_BASE_URL;
+
+export function meApi(
+): Promise<AuthUser> {
+
+  return request<AuthUser>(`${AUTH_BASE_URL}/me`, {
+    method: "GET",
+    credentials: "include"
+  });
+}
+
 /**
  * Login
  * POST /users/signin
  *  
  */
-export function login(
+export function loginApi(
   payload: LoginRequest
-): Promise<AuthResponse> {
-  return request<AuthResponse>(`${AUTH_BASE_URL}/signin`, {
+): Promise<MessageResponse> {
+  return request<MessageResponse>(`${AUTH_BASE_URL}/signin`, {
     method: "POST",
     body: JSON.stringify(payload),
-    //credentials: "include"
+    //credentials: "include" added to request instead
   });
 }
 
@@ -34,11 +45,11 @@ export function login(
  * 
  */
 
-export async function register(
+export async function registerApi(
   payload: RegisterRequest
-): Promise<AuthResponse> {
+): Promise<MessageResponse> {
   
-  return request<AuthResponse>(`${AUTH_BASE_URL}/signup`, {
+  return request<MessageResponse>(`${AUTH_BASE_URL}/signup`, {
     method: "POST",
     body: JSON.stringify(payload),
     //credentials: "include"
@@ -48,13 +59,13 @@ export async function register(
 
 
 /**
- * Request password reset -- RequestPasswordReset
+ * Request password reset -- RequestPasswordResetRequest
  * POST /users/resetpassword
  * @param payload (email)
  * @returns 
  */
 export async function requestPasswordResetApi(
-  payload: RequestPasswordReset,
+  payload: RequestPasswordResetRequest,
 ): Promise<MessageResponse> {
      console.log(payload);
 
@@ -74,10 +85,10 @@ export async function requestPasswordResetApi(
  */
 
 export async function confirmPasswordResetApi(
-  payload: PasswordReset
-): Promise<AuthResponse> {
+  payload: PasswordResetRequest
+): Promise<MessageResponse> {
 
-  return request<AuthResponse>(`${AUTH_BASE_URL}/resetnewpass`, {
+  return request<MessageResponse>(`${AUTH_BASE_URL}/resetnewpass`, {
     method: "POST",
     body: JSON.stringify(payload),
 //    credentials: "include"
@@ -92,7 +103,7 @@ export async function confirmPasswordResetApi(
  */
 
 export async function verifyEmailApi(
-  payload: VerifyEmail
+  payload: VerifyEmailRequest
 ): Promise<MessageResponse> {
 
   return request<MessageResponse>(`${AUTH_BASE_URL}/verifyemail`, {
