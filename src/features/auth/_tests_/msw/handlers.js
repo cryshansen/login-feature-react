@@ -1,5 +1,5 @@
-import { http, HttpResponse } from "msw";
 
+import { rest } from 'msw';
 
 const API = 'http://localhost/auth';
 
