@@ -8,7 +8,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./src/features/auth/_tests_/setup.js",
+    setupFiles: [
+      "./src/features/auth/_tests_/setup.js", 
+      "./src/features/auth/_tests_/test.env.ts"
+    ],
 
     exclude: [
       'node_modules', 'dist', 

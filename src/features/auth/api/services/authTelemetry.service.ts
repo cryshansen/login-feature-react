@@ -8,11 +8,16 @@ import { AuthTelemetryEvent } from "../schemas/authtelemetry.types";
 // const { AUTH_BASE_URL : API_BASE_URL } = API_CONFIG;
 
 const  AUTHTEL_BASE_URL  = API_CONFIG.AUTHTEL_API_URL;
+const AUTH_TEST_MODE = API_CONFIG.AUTH_TEST_MODE;
 
 export function emitAuthEvent(
   event: AuthTelemetryEvent,
   metadata: Record<string, any> = {}
 ) {
+  if(AUTH_TEST_MODE === "test") {
+    // In test mode, we skip sending telemetry to avoid polluting test runs
+    return;
+  }
   try {
     fetch(`${AUTHTEL_BASE_URL}/telemetry`, {
       method: "POST",

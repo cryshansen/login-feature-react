@@ -8,6 +8,7 @@ import {MessageResponse} from "../api/schemas/auth.types";
 
 
 describe("AuthContext events & integration flow", () => {
+  
   it("emits events and handles login → logout flow", async () => {
     const emitSpy = vi.spyOn(await import("../api/services/authTelemetry.service"), "emitAuthEvent");
 
