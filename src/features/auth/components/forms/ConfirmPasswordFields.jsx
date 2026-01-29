@@ -26,14 +26,16 @@ export default function ConfirmPasswordFields({
     <>
       {/* Password */}
       <div>
-        <label className="block mb-1 text-sm font-medium text-gray-100">
+        <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-100">
           Password
         </label>
 
         <div className="relative">
           <input
+            id="password"
             type={showPassword ? "text" : "password"}
             value={password}
+            name = "password"
             autoComplete="on"
             onFocus={() => setTouched(true)}
             onChange={(e) => setPassword(e.target.value)}
@@ -45,6 +47,8 @@ export default function ConfirmPasswordFields({
 
           <button
             type="button"
+            name="show-password"
+            aria-label={showPassword ? "Hide password" : "Show password"}
             onClick={() => setShowPassword((v) => !v)}
             className="absolute inset-y-0 right-0 flex items-center pr-3 bg-transparent
               text-gray-400 hover:text-gray-200"
@@ -62,14 +66,16 @@ export default function ConfirmPasswordFields({
       {/* Confirm Password */}
       {showConfirm && (
         <div className="mt-4">
-          <label className="block mb-1 text-sm font-medium text-gray-100">
+          <label htmlFor="confirm-password" className="block mb-1 text-sm font-medium text-gray-100">
             Confirm Password
           </label>
 
           <div className="relative">
             <input
+             id="confirm-password"
               type={showConfirmPassword ? "text" : "password"}
               value={confirm}
+              name="confirm-password-field"
               autoComplete="on"
               onChange={(e) => setConfirm(e.target.value)}
               className={`block w-full rounded-md bg-white/5 px-3 py-1.5 pr-10
@@ -85,6 +91,7 @@ export default function ConfirmPasswordFields({
 
             <button
               type="button"
+              name="show-confirm-password"
               onClick={() => setShowConfirmPassword((v) => !v)}
               className="absolute inset-y-0 right-0 flex items-center pr-3 bg-transparent
                 text-gray-400 hover:text-gray-200"

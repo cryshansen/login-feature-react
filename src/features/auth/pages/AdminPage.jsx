@@ -1,6 +1,6 @@
 
 import AuthBackground from "../components/elements/AuthBackground";
-import {useAuth} from "../../../context/AuthContext";
+import {useAuth} from "../context/AuthContext";
 
 
 export default function AdminPage({ darkMode }) {

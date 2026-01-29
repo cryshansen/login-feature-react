@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginForm({ darkMode }) {
 
@@ -16,6 +16,7 @@ export default function LoginForm({ darkMode }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState();
+  const fieldsMatch = email.length > 0 && password.length > 4;
   useEffect(()=>{
 
     if(authuser){
@@ -41,11 +42,11 @@ export default function LoginForm({ darkMode }) {
   return (
     <>
           { authMessage && (
-            <p className="text-sm text-indigo-400">{authMessage.text}</p>
+            <p role="status" className="text-sm text-indigo-400">{authMessage.text}</p>
           )}
 
           { error && (
-            <p className="text-sm text-indigo-400">{error}</p>
+            <p role="error" className="text-sm text-indigo-400">{error}</p>
           )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -66,13 +67,15 @@ export default function LoginForm({ darkMode }) {
               </div>
             </div>
             <div>
-              <label className="block mb-1 text-sm font-medium text-gray-100">
+              <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-100">
                 Password
               </label>
       
               <div className="relative">
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
+                  name="password"
                   value={password}
                   autoComplete="on"
                   onChange={(e) => setPassword(e.target.value)}
@@ -84,6 +87,8 @@ export default function LoginForm({ darkMode }) {
       
                 <button
                   type="button"
+                  name="show-password"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 bg-transparent
                     text-gray-400 hover:text-gray-200"
@@ -110,6 +115,9 @@ export default function LoginForm({ darkMode }) {
             <div>
               <button
                   type="submit"
+                  name="signin"
+                  aria-disabled={!fieldsMatch}
+                  disabled={!fieldsMatch}
                   className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
                   Sign in

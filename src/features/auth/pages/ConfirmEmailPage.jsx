@@ -2,19 +2,19 @@ import { useEffect, useState, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 
 import AuthBackground from "../components/elements/AuthBackground";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function ConfirmEmailPage({darkMode}) {
   const [searchParams] = useSearchParams();
   const tokenUrl = searchParams.get("token");
   const email =  searchParams.get("email");
-//verifyEmail page. TODO: integrate with api. need params from email link to confirm on page landing.
 
+  
  const { verifyEmailAccount, authMessage, setAuthMessage } = useAuth();
  
   const [error, setError] = useState(null);
   const captchaToken="ABVCret_45FDSxs_23Rtfs" //captcha blocking bot access essentially / could be cloudfare
-  const isLoading = !authMessage && !error;
+  const isLoading = !authMessage && !error && tokenUrl && email;
 
   const hasRunRef = useRef(false);
   useEffect(() => {
@@ -22,10 +22,7 @@ export default function ConfirmEmailPage({darkMode}) {
       hasRunRef.current = true;
     // 1. Validate URL params
     if (!tokenUrl || !email) {
-      setAuthMessage({
-        type: "error",
-        text: "Invalid or expired verification link. Please contact support.",
-      });
+      setError("Invalid or expired verification link. Please contact support.");
       return;
     }
 
@@ -58,7 +55,7 @@ export default function ConfirmEmailPage({darkMode}) {
       <div className="text-center">
         {/* Status message */}
         {authMessage && (
-          <p
+          <p role="status"
             className={`text-sm ${
               authMessage.type === "error"
                 ? "text-red-400"
@@ -69,7 +66,7 @@ export default function ConfirmEmailPage({darkMode}) {
           </p>
         )}
         {error && (
-          <div className="p-3 rounded bg-red-100 text-red-800">
+          <div role="error" className="p-3 rounded bg-red-100 text-red-800">
             {error}
           </div>
         )}
@@ -90,7 +87,7 @@ export default function ConfirmEmailPage({darkMode}) {
         {/* Success */}
         {authMessage?.type === "success" && (
           <>
-            <p className="text-base font-semibold text-indigo-400">OK!</p>
+            <p role="success" className="text-base font-semibold text-indigo-400">OK!</p>
             <h1 className="mt-4 text-5xl font-semibold tracking-tight text-white">
               Your Email is Confirmed
             </h1>
@@ -112,7 +109,7 @@ export default function ConfirmEmailPage({darkMode}) {
         {/* Failure */}
         { authMessage?.type === "error" && (
           <>
-            <p className="text-base font-semibold text-orange-400">OUCH!</p>
+            <p role="failure" className="text-base font-semibold text-orange-400">OUCH!</p>
             <h1 className="mt-4 text-5xl font-semibold tracking-tight text-white text-amber-300">
               We're Having Issues
             </h1>

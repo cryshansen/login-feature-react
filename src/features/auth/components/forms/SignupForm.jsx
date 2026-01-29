@@ -5,7 +5,7 @@ import ConfirmPasswordFields from "./ConfirmPasswordFields";
 import FirstLastNameFields from "./FirstLastNameFields";
 
 
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import {getPasswordStrength} from "../utils/passwordStrength";
 /**
  * 
@@ -58,7 +58,7 @@ export default function SignupForm({ darkMode }) {
     <>
          {authMessage && (
         <div className="space-y-3">
-          <div className="p-3 rounded bg-green-100 text-green-800">
+          <div role="status" area-label={authMessage.text} className="p-3 rounded bg-green-100 text-green-800">
             {authMessage.text}
           </div>
 
@@ -71,7 +71,7 @@ export default function SignupForm({ darkMode }) {
         </div>
       )}
       {error && (
-        <div className="p-3 rounded bg-red-100 text-red-800">
+        <div role="error" className="p-3 rounded bg-red-100 text-red-800">
           {error}
         </div>
       )}
@@ -106,9 +106,11 @@ export default function SignupForm({ darkMode }) {
           />
           <button
             type="submit"
+            name="signup"
+            aria-disabled={!passwordsMatch}
             disabled={!passwordsMatch}
             className={`flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400
-                        focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500
               ${
                     passwordsMatch
                       ? "bg-indigo-600 hover:bg-indigo-700 text-white"

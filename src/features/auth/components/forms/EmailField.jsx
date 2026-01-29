@@ -6,9 +6,11 @@ export default function EmailField({ darkMode, email, onChange }) {
     return (
 
         <div>
-          <label className="block mb-1 font-medium text-sm/6 text-gray-50">Email</label>
+          <label htmlFor="email" className="block mb-1 font-medium text-sm/6 text-gray-50">Email</label>
           <input
+            id="email"
             type="email"
+            name="email-field"
             value={email}
             required
             onChange={(e) => onChange(e.target.value)}

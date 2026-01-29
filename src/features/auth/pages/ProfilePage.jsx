@@ -5,7 +5,7 @@ import AuthBackground from "../components/elements/AuthBackground";
 import FirstLastNameFields from "../components/forms/FirstLastNameFields";
 import EmailField from "../components/forms/EmailField";
 
-import {useAuth} from "../../../context/AuthContext";
+import {useAuth} from "../context/AuthContext";
 
 export default function ProfilePage({ darkMode }) {
    const navigate = useNavigate();

@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import ConfirmPasswordFields from "./ConfirmPasswordFields";
 import PasswordInput from "./PasswordField";
 
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import {getPasswordStrength} from "../utils/passwordStrength";
 
 export default function ConfirmResetForm({ darkMode }) {
@@ -58,13 +58,13 @@ export default function ConfirmResetForm({ darkMode }) {
     <>
       {authMessage && (
         <div className="space-y-3">
-          <div className="p-3 rounded bg-green-100 text-green-800">
+          <div role="status" className="p-3 rounded bg-green-100 text-green-800">
             {authMessage.text}
           </div>
         </div>
       )}
       {error && (
-          <div className="p-3 rounded bg-red-100 text-red-800">
+          <div role="error" className="p-3 rounded bg-red-100 text-red-800">
             {error}
           </div>
         )}
@@ -90,6 +90,7 @@ export default function ConfirmResetForm({ darkMode }) {
 
             <button
               type="submit"
+              name="reset"
               disabled={!passwordsMatch}
               className={`
                 w-full py-3 rounded-xl font-semibold transition

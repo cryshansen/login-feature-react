@@ -1,7 +1,7 @@
 // context/LoadingContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import GlobalSpinner from '../app/components/elements/GlobalSpinner';
+import GlobalSpinner from '../ui/loaders/GlobalSpinner';
 
 
 type LoadingContextType = {
