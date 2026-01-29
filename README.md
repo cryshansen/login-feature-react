@@ -1,32 +1,15 @@
 # React Login Feature
 
-This repository is a compilation of a login feature in React. It is intended to be used in conjunction with the block post series React Login Feature.  It walks through all conciderations from the initial start of a react project building the routing, UI implementations, state, localstorage, API connections testing and deployment into another app to test its drop in feature effectiveness. 
+This repository is a compilation of a login feature in React as a reference to a Login Feature Blog Series. It is intended to be used in conjunction with the block post series React Login Feature.  It walks through all considerations from the initial start of a react project building the routing, UI implementations, state, localstorage vs cookie persistence, API connections, testing and deployment into another app to test its drop in feature effectiveness. 
 
-Every developer requires component features that provide services for the different components of general website functionalities. This feature is a login app component. Other features could include carts, payment, storefront frameworks etc. 
+Every developer requires component features that provide services for the different general website and app functionalities. This feature is a login app component. Other features could include carts, payment, storefront frameworks etc. 
 
+
+{: note}
+“For the final tested implementation, see main branch.
+post01–post07 branches accompany the blog posts.”
+
+
+If you are insterested in just grabbing an app framework pre-build head to the [base-login-app] (https://base-login-app) repo to start a fresh tailwind driven site with the login dropped in for you. Follow its npm installations and readme information.
 
 ---
-
-
-Notes on React + Vite configurations
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules. Later we will build out the Typescript version however this particular series is a walkthough about a life cycle of a developers processes to end product. It is intended as a demonstration of feature development including ci and github actions against testing. 
-
----
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-A Future development model in TypeScript shall follow for strongly typed fields.
