@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:auth" : "vitest run src/features/auth",
     "test:watch": "vitest --watch",
+    "test:auth" : "vitest run src/features/auth",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
