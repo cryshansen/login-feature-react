@@ -1,8 +1,8 @@
-import { loginHandlers } from './msw/login.handlers';
-import { emailHandlers } from './msw/verify-email.handlers';
-import { signupHandlers } from './msw/signup.handlers';
-import { passwordHandlers } from './msw/password.handlers';
-import {telemetryHandlers} from "./msw/telemetry.handlers";
+import { loginHandlers } from './login.handlers';
+import { emailHandlers } from './verify-email.handlers';
+import { signupHandlers } from './signup.handlers';
+import { passwordHandlers } from './password.handlers';
+import {telemetryHandlers} from "./telemetry.handlers";
 
 export const handlers =[
     ...loginHandlers, 
@@ -10,4 +10,4 @@ export const handlers =[
     ...signupHandlers, 
     ...passwordHandlers,
     ...telemetryHandlers
-]
+];
