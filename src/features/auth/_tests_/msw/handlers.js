@@ -1,33 +1,28 @@
 import { http, HttpResponse } from "msw";
 
-let isAuthenticated = false;
 
-export const handlers = [
-  http.get("/api/auth/me", () => {
-    if (!isAuthenticated) {
-      return HttpResponse.json(
-        { error: "Unauthenticated" },
-        { status: 401 }
+const API = 'http://localhost/auth';
+
+export const authHandlers =  [
+  // ❌ Email already exists
+  rest.post(`${API}/signup`, async (req, res, ctx) => {
+    const { email } = await req.json();
+
+    if (email === 'test11@test.com') {
+      return res(
+        ctx.status(409),
+        ctx.json({
+          message: 'An account with this email already exists.',
+        })
       );
     }
 
-    return HttpResponse.json({
-      id: 1,
-      email: "me@test.com",
-      emailVerified: true,
-    });
-  }),
-
-  http.post("/api/auth/login", async () => {
-    isAuthenticated = true;
-    return HttpResponse.json({
-      success: true,
-      message: "Login successful",
-    });
-  }),
-
-  http.post("/api/auth/logout", async () => {
-    isAuthenticated = false;
-    return HttpResponse.json({ success: true });
+    // ✅ Successful signup
+    return res(
+      ctx.status(201),
+      ctx.json({
+        message: 'Signup successful. Verification email sent.',
+      })
+    );
   }),
 ];
