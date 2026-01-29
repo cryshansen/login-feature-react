@@ -1,8 +1,9 @@
 import "@testing-library/jest-dom";
 import { setupServer } from 'msw/node';
-import { authHandlers } from './msw/handlers';
+import { handlers } from './msw/index';
 
-export const server = setupServer(...authHandlers);
+export const server = setupServer();
+
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => server.resetHandlers());
