@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:auth" : "vitest run src/features/auth",
+    "test:ui": "vitest run src/features/**/ui",
+    "test:context": "vitest run src/features/**/context",
+    "test:service": "vitest run src/features/**/services",
+    "test:flow": "vitest run src/features/**/flows",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
