@@ -21,4 +21,4 @@ jobs:
       - run: npm ci
 
       - name: Run context tests
-        run: npm run test:context
+        run: npm run test:auth:context

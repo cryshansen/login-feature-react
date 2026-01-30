@@ -4,6 +4,7 @@ export default {
   ...base,
   test: {
     ...base.test,
-    include: [], // prevents accidental test execution
+    environment: "node",
+    include: ["**/*.service.test.ts"],
   },
 };

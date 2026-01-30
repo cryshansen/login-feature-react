@@ -21,4 +21,4 @@ jobs:
       - run: npm ci
 
       - name: Run service tests
-        run: npm run test:service
+        run: npm run test:auth:service

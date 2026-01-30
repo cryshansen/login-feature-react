@@ -24,4 +24,4 @@ jobs:
         env:
           VITE_AUTH_TEST_MODE: "true"
           VITE_AUTH_API_URL: "http://localhost"
-        run: npm run test:flow
+        run: npm run test:auth:flow

@@ -10,10 +10,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:ui": "vitest run src/features/**/ui",
-    "test:context": "vitest run src/features/**/context",
-    "test:service": "vitest run src/features/**/services",
-    "test:flow": "vitest run src/features/**/flows",
+    "test:auth:service": "vitest run -c vitest.service.config.ts",
+    "test:auth:context": "vitest run -c vitest.context.config.ts",
+    "test:auth:ui": "vitest run -c vitest.ui.config.ts",
+    "test:auth:flow": "vitest run -c vitest.flow.config.ts",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
