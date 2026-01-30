@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
-
+import { API_CONFIG } from "../../../../config/env";
 let isAuthenticated = false;
-const API = 'http://localhost';
+const API = API_CONFIG.AUTH_BASE_URL;
 
 export const passwordHandlers = [
      

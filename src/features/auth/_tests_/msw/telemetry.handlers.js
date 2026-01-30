@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { AUTH_API } from "@/config/env";
-const API = AUTH_API;
+import { API_CONFIG } from "../../../../config/env";
+const API = API_CONFIG.AUTHTEL_API_URL;
 
 export const telemetryHandlers = [
   http.post(`${API}/telemetry`, async () =>{

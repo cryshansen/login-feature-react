@@ -1,7 +1,11 @@
 import { http, HttpResponse } from "msw";
-import { AUTH_API } from "@/config/env";
+
+import { API_CONFIG } from "../../../config/env";
+
 let isAuthenticated = false;
-const API = AUTH_API;
+
+const API = API_CONFIG.AUTH_BASE_URL;
+
 export const signupHandlers = [
   http.post(`${API}/signup`, async ({ request }) => {
     const { email } = await request.json();
