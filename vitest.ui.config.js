@@ -5,6 +5,7 @@ export default {
   test: {
     ...base.test,
     environment: "jsdom",
-    include: ["**/*Page*.test.{ts,tsx}", "**/*Form*.test.{ts,tsx}"],
+    include: ["**/*Page*.test.{js,jsx}", "**/*Form*.test.{js,jsx}"],
   },
 };
+

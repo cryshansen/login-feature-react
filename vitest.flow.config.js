@@ -5,7 +5,7 @@ export default {
   test: {
     ...base.test,
     environment: "jsdom",
-    setupFiles: ["src/test/msw.setup.ts"],
+    setupFiles: ["src/test/msw.index.ts"],
     include: ["**/*Flow*.test.{ts,tsx}", "**/*Events*.test.{ts,tsx}"],
   },
 };
