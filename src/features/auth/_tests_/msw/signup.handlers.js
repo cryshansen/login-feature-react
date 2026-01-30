@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 
-import { API_CONFIG } from "../../../config/env";
+import { API_CONFIG } from "../../../../config/env";
 
 let isAuthenticated = false;
 
