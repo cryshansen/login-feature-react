@@ -1,5 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from "vitest";
 import { loginApi } from "../api/services/auth.service";
+
+import {server} from "./msw/server";
+
+beforeAll(() => {
+  server.close(); // ⛔ disable MSW for this file
+});
+
+afterAll(() => {
+  server.listen({ onUnhandledRequest: "error" }); // restore for other tests
+});
+
+
 
 const mockFetch = vi.fn();
 
@@ -10,6 +22,7 @@ describe("auth.service login()", () => {
     mockFetch.mockReset();
   });
 
+  //FAILED
   it("returns parsed JSON on success", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -32,7 +45,7 @@ describe("auth.service login()", () => {
     expect(result.message).toBe("Login successful");
     
   });
-
+//FIALED
   it("throws when API returns error JSON", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
@@ -54,6 +67,7 @@ describe("auth.service login()", () => {
     ).rejects.toThrow("Invalid credentials");
   });
 
+//FAILED
   it("throws on network failure", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
 

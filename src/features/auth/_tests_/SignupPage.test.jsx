@@ -48,7 +48,29 @@ describe("SignupPage", () => {
   });
 
 
-//An account with this email already exists.  when already signed up
+//An account with this email already exists.  when already signed up FAILED GITHUB PASSED LOCALLY
+//Unable to find an element with the text: /An account with this email already exists/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+/*
+  <div
+            area-label="HTTP error! status: 409"
+            class="p-3 rounded bg-green-100 text-green-800"
+            role="status"
+          >
+            HTTP error! status: 409
+          </div>
+          <button
+            class="text-sm text-purple-600 hover:underline"
+          >
+            Resend confirmation email
+          </button>
+        </div>
+        <div
+          class="p-3 rounded bg-red-100 text-red-800"
+          role="error"
+        >
+          HTTP error! status: 409
+        </div>
+  */
   test("failed signup shows account with this email already exists message", async () => {
 
     renderWithAuth(<SignupPage />, { route: "/signup" });
@@ -84,6 +106,8 @@ describe("SignupPage", () => {
 
 
   });
+
+  //FAILED GITHUB
   
   test("successful signup shows check email message", async () => {
 
@@ -113,14 +137,15 @@ describe("SignupPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /sign up/i })); //signup-button
   
   
-    //You signed up!, Check your inbox. We’ve sent you an email to verify your account.
+    //BACKEND MESSAGE FROM PHP You signed up!, Check your inbox. We’ve sent you an email to verify your account.
+    //Signup successful. Verification email sent. TEST RESPONSE FROM MOCK
     const status = await screen.findByRole("status");
-    expect(status).toHaveTextContent(/You signed up/i);
+    expect(status).toHaveTextContent(/Signup successful/i);
 
   
     //
     expect(
-        await screen.findByText(/Check your inbox/i)
+        await screen.findByText(/Verification email sent/i)
       ).toBeInTheDocument();
     
 
