@@ -13,7 +13,10 @@ export default defineConfig({
       "./src/features/auth/_tests_/setup.js", 
 
     ],
-
+    define: {
+      'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost'),
+      'import.meta.env.VITE_TELEMETRY_URL': JSON.stringify('http://localhost'),
+    },
     exclude: [
       'node_modules', 'dist', 
       '**/__tests__/**/fixtures/**',

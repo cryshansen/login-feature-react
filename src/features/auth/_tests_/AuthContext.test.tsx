@@ -112,9 +112,11 @@ sample for captcha failure. this is not currently implemented in the service.
   });*/
 
  /* ======================
-     Confirm reset password
+     Confirm reset password 
   ====================== */
+//a Context layer condition test
 it("throws when passwords do not match", async () => {
+  
     const { result } = renderHook(() => useAuth(), {
       wrapper: TestProviders,
     });

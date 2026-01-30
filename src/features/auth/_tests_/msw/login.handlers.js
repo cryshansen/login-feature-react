@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 let isAuthenticated = false;
+
 const API = 'http://localhost';
 
 export const loginHandlers = [
