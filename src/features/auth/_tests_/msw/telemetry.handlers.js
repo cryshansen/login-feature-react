@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
-
-const API = 'http://localhost';
+import { AUTH_API } from "@/config/env";
+const API = AUTH_API;
 
 export const telemetryHandlers = [
   http.post(`${API}/telemetry`, async () =>{

@@ -1,10 +1,10 @@
 import { http, HttpResponse } from "msw";
-
+import { AUTH_API } from "@/config/env";
 let isAuthenticated = false;
-const API = 'http://localhost';
+const API = AUTH_API;
 
 export const meHandlers = [
-  http.get(`${API}/api/auth/me`, () => {
+  http.get(`${API}/me`, () => {
     if (!isAuthenticated) {
       return HttpResponse.json(
         { error: "Unauthenticated" },

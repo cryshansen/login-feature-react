@@ -1,12 +1,12 @@
 import { http, HttpResponse } from "msw";
-
+import { AUTH_API } from "@/config/api";
 let isAuthenticated = false;
 
-const API = 'http://localhost';
+const API = AUTH_API;
 
 export const loginHandlers = [
 
-  http.post(`${API}/api/auth/login`, async () => {
+  http.post(`${API}/login`, async () => {
     isAuthenticated = true;
     return HttpResponse.json({
       success: true,

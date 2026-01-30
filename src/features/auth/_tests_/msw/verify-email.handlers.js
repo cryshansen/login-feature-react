@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
-
+import { AUTH_API } from "@/config/env";
 let isAuthenticated = false;
-const API = 'http://localhost';
+const API = AUTH_API;
 export const emailHandlers = [
   
   http.post(`${API}/verify-email`, async ({ request }) => {

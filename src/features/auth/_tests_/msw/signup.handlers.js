@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
-
+import { AUTH_API } from "@/config/env";
 let isAuthenticated = false;
-const API = 'http://localhost';
+const API = AUTH_API;
 export const signupHandlers = [
   http.post(`${API}/signup`, async ({ request }) => {
     const { email } = await request.json();
