@@ -1,3 +1,4 @@
+import React from 'react';
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import ConfirmResetPage from "../pages/ConfirmResetPage";

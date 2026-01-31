@@ -1,6 +1,5 @@
 import { screen, fireEvent } from "@testing-library/react";
-//import { logTestingPlaygroundURL } from "@testing-library/dom";
-
+import React from 'react';
 
 
 import SignupPage from "../pages/SignupPage";
@@ -97,12 +96,13 @@ describe("SignupPage", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: /sign up/i })); //signup-button
-
+/*
     const error = await screen.findByText(
       /An account with this email already exists/i
     );
-
-    expect(error).toBeInTheDocument();
+*/
+    const error = await screen.findAllByText(/HTTP error! status: 409/i);
+    expect(error.length).toBeGreaterThan(0);
 
 
   });

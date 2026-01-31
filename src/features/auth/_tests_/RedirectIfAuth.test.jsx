@@ -1,3 +1,4 @@
+import React from 'react';
 import { screen, waitForElementToBeRemoved } from "@testing-library/react";
 import { Routes, Route } from "react-router-dom";
 import { renderWithAuth } from "./test-utils";

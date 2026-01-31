@@ -1,7 +1,5 @@
+import React from 'react';
 import { screen, fireEvent } from "@testing-library/react";
-//import { logTestingPlaygroundURL } from "@testing-library/dom";
-
-
 
 import LoginPage from "../pages/LoginPage";
 import { renderWithAuth } from "./test-utils";

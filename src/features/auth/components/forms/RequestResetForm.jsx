@@ -28,7 +28,7 @@ export default function RequestResetForm({ darkMode }) {
     return (
       <>
        {authMessage && (
-          <div className="space-y-3">
+          <div role="status" className="space-y-3">
             <div className="p-3 rounded bg-green-100 text-green-800">
               {authMessage.text}
             </div>
@@ -36,7 +36,7 @@ export default function RequestResetForm({ darkMode }) {
         )}
 
         {error && (
-          <div className="p-3 rounded bg-red-100 text-red-800">
+          <div role="error" className="p-3 rounded bg-red-100 text-red-800">
             {error}
           </div>
         )}

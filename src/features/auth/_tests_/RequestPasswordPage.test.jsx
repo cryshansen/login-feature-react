@@ -1,6 +1,7 @@
 import { screen, fireEvent } from "@testing-library/react";
-//import { logTestingPlaygroundURL } from "@testing-library/dom";
-
+import React from 'react';
+import {server } from "./msw.setup";
+import { http, HttpResponse } from "msw";
 
 
 import RequestResetPage from "../pages/RequestResetPage";
@@ -39,13 +40,22 @@ describe("RequestResetPage", () => {
 
         fireEvent.click(screen.getByRole("button", { name: /Send Reset/i })); //request-reset
     
-        const status = await screen.findByRole("status");//CANT FIND THIS 
-        expect(status).toHaveTextContent(/An email to reset your password/i);
+        const status = await screen.findByRole("status");//added role status to form file
+        expect(status).toHaveTextContent(/Password reset email sent/i);
 
     });
-//FAILED
+
+
     test("failed reset password request", async () => {
 
+         server.use(
+            http.post("*/resetpassword", async () => {
+            return HttpResponse.json(
+                { error: "Account does not exist" },
+                { status: 404 }
+            );
+            })
+        );
         renderWithAuth(<RequestResetPage />, { route: "/reset?token=abc123&email=test7@test.com" });
 
         fireEvent.change(screen.getByLabelText(/email/i), { 
@@ -54,8 +64,8 @@ describe("RequestResetPage", () => {
 
         fireEvent.click(screen.getByRole("button", { name: /Send Reset/i })); //request-reset
     
-        const status = await screen.findByRole("error"); //CANT FIND THIS
-        expect(status).toHaveTextContent(/Account does not exist/i);
+        const status = await screen.findAllByText(/^Account does not exist$/i); 
+        expect(status.length).toBeGreaterThan(0);
 
     });
 

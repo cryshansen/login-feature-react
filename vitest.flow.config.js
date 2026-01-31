@@ -1,11 +1,12 @@
+import { defineConfig } from "vitest/config";
 import base from "./vitest.base.config";
 
-export default {
+export default defineConfig({
   ...base,
-  test: {
+  test: { 
     ...base.test,
     environment: "jsdom",
-    setupFiles: ["src/test/msw.index.ts"],
+    setupFiles: ["src/features/auth/_tests_/msw.setup.js"],
     include: ["**/*Flow*.test.{ts,tsx}", "**/*Events*.test.{ts,tsx}"],
   },
-};
+});
