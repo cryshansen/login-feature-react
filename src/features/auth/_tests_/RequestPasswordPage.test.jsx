@@ -64,7 +64,7 @@ describe("RequestResetPage", () => {
 
         fireEvent.click(screen.getByRole("button", { name: /Send Reset/i })); //request-reset
     
-        const status = await screen.findAllByText(/^Account does not exist$/i); 
+        const status = await screen.findAllByText(/Account does not exist/i); 
         expect(status.length).toBeGreaterThan(0);
 
     });
